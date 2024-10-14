@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font-family: "Open Sans", sans-serif;
+    vertical-align: baseline;
+    max-width: 1920px;
+}
+
+.hero-section {
+    display: flex;
+    background-color: rgba(47, 128, 237, 0.1);
+    justify-content: center;
+    padding: 0.75rem 0rem;
+}
+
+.hero-items-container {
+    display: flex;
+    margin-left: 2.563rem;
+}
+
+.hero-item {
+    margin-right: 1.563rem;
+}
+
+.hero-item-info-text {
+    margin-right: 0.5rem;
+    font-weight: 600;
+}
+
+.hero-item-daily-price-diff {
+    margin-right: 0.25rem;
+    font-weight: 400;
+}
+
+.hero-item-daily-price-diff.below {
+    color: #A01313;
+}
+
+.hero-item-daily-price-diff.above {
+    color: #135D2D;
+}
+
+.hero-item-arrow {
+    height: 14px;
+}
