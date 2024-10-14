@@ -7,14 +7,19 @@
     font-size: 100%;
     font-family: "Open Sans", sans-serif;
     vertical-align: baseline;
-    max-width: 1920px;
+}
+
+body {
+    width: 1440px;
+    margin: 0 auto;
+    color: #050F19;
 }
 
 .hero-section {
-    display: flex;
     background-color: rgba(47, 128, 237, 0.1);
+    display: flex;
     justify-content: center;
-    padding: 0.75rem 0rem;
+    padding: 0.75rem 0;
 }
 
 .hero-items-container {
@@ -27,13 +32,8 @@
 }
 
 .hero-item-info-text {
-    margin-right: 0.5rem;
     font-weight: 600;
-}
-
-.hero-item-daily-price-diff {
-    margin-right: 0.25rem;
-    font-weight: 400;
+    margin-right: 0.5rem;
 }
 
 .hero-item-daily-price-diff.below {
@@ -44,6 +44,57 @@
     color: #135D2D;
 }
 
-.hero-item-arrow {
+.hero.arrow {
     height: 14px;
 }
+
+.main-navigation-section {
+    margin: auto;
+    padding: 20px 120px;
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+}
+
+.main-nav-container {
+    display: flex;
+    align-items: center;
+}
+
+.main-nav-container .main-nav {
+    align-items: center;
+}
+
+.auth-nav {
+    display: flex;
+    align-items: center;
+}
+
+.nav-element {
+    text-decoration: none;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 40px;
+}
+
+.main-nav .nav-element:last-child {
+    margin-right: 50px;
+}
+
+.auth-nav {
+    border-left: 1px solid #DDDDDD;
+    height: 45px;
+}
+
+.auth-nav .auth-element:first-child {
+    padding-left: 50px;
+}
+
+.auth-nav .auth-element:last-child {
+    border: 1px solid #2F80ED;
+    border-radius: 5px;
+    padding: 10px 30px;
+    color: #2F80ED;
+}
+
+
