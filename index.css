@@ -97,4 +97,12 @@ body {
     color: #2F80ED;
 }
 
+.info-text {
+    background-color: #2F80ED;
+    color: #fff;
+    text-align: center;
+    padding: 12px 0;
+    font-weight: 700;
+}
+
 
