@@ -177,4 +177,13 @@ body {
     z-index: 1;
 }
 
+.section-separator {
+    width: 600px;
+    margin: 0 auto;
+    margin-top: 50px;
+    height: 1px;
+    background-color: #2F80ED;
+    opacity: 30%;
+}
+
 
