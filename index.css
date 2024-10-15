@@ -167,6 +167,7 @@ body {
     display: flex;
     margin-left: 117px;
     align-items: center;
+    margin-bottom: 50px;
 }
 
 .goto-right-container svg {
@@ -180,10 +181,50 @@ body {
 .section-separator {
     width: 600px;
     margin: 0 auto;
-    margin-top: 50px;
     height: 1px;
     background-color: #2F80ED;
     opacity: 30%;
 }
+
+.features-title {
+    margin-top: 5rem;
+    text-align: center;
+    font-size: 46px;
+    font-weight: 600;
+}
+
+.features-info-text {
+    margin-top: 1.25rem;
+    text-align: center;
+}
+
+
+
+.main-features-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 40px;
+    margin-bottom: 80px;
+}
+
+.left-section{
+    width: 437px;
+}
+
+.feature-container {
+    display: flex;
+    margin-bottom: 30px;
+    justify-content: space-around;
+}
+
+.feature-info-container {
+    width: 330px;
+}
+
+.feature-title {
+    font-size: 32px;
+}
+
 
 
