@@ -86,6 +86,10 @@ body {
     height: 45px;
 }
 
+.auth-element {
+    background-color: white;
+}
+
 .auth-nav .auth-element:first-child {
     padding-left: 50px;
 }
@@ -481,8 +485,37 @@ footer {
     margin: 0 auto;
     padding-top: 30px;
     padding-bottom: 60px;
-
 }
 
 
+.nav-element:hover {
+    color: rgba(5, 15, 25, 0.6);
+}
 
+.auth-element:last-child:hover {
+    background-color: #2F80ED;
+    color: white;
+}
+
+.goto-main-btn:hover {
+    background-color: rgba(47, 128, 237, 0.8);
+    cursor: pointer;
+}
+
+.product-table-row td:last-child button:hover {
+    cursor: pointer;
+    background-color: rgba(255, 189, 0, 0.6);
+}
+
+.single-blog-container a:hover {
+    color: rgba(47, 128, 237, 0.7);
+}
+
+.sitemap-column-container a:hover {
+    text-decoration: underline;
+}
+
+.sitemap-subscribe-container button:hover {
+    background-color: rgba(47, 128, 237, 0.8);
+    cursor: pointer;
+}
