@@ -445,7 +445,7 @@ footer {
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: space-between;
     padding-top: 60px;
     margin-bottom: 30px;
 }
@@ -453,7 +453,7 @@ footer {
 .left-sitemap-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 3%;
+    justify-content: space-between;
 }
 
 .right-sitemap-container {
@@ -464,7 +464,7 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    width: 60%;
+    width: 20%;
 }
 
 .sitemap-column-name {
@@ -655,11 +655,8 @@ footer {
 
     .left-sitemap-container {
         gap: 40px;
+        align-items: center;
         justify-content: center;
-    }
-
-    .sitemap-column-container {
-        width: 40%;
     }
 
     .right-sitemap-container {
