@@ -1,0 +1,15 @@
+@use '../abstracts/colors';
+
+@mixin main-button-base-style($font-size) {
+    background-color: colors.$primary-color;
+    color: white;
+    font-size: $font-size;
+    font-weight: 600;
+}
+
+@mixin secondary-button-base-style($padding) {
+    border: 1px solid colors.$primary-color;
+    border-radius: 5px;
+    padding: $padding;
+    color: colors.$primary-color;
+}

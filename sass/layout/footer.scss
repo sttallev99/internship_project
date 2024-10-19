@@ -1,0 +1,209 @@
+@use '../abstracts/colors';
+@use '../components/buttons';
+footer {
+
+    background-color: colors.$secondary-color;
+
+    .sitemap-container {
+        width: 85%;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding-top: 60px;
+        margin-bottom: 30px;
+    }
+    
+    .left-sitemap-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    
+    .right-sitemap-container {
+        width: 40%;
+    }
+    
+    .sitemap-column-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 20%;
+    }
+    
+    .sitemap-column-name {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    
+    .sitemap-element {
+        color: colors.$secondary-text-color;
+    }
+    
+    .subscribe-text {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    
+    .subscribe-info {
+        color: #828282;
+        margin-bottom: 16px;
+    }
+    
+    .subscribe-element-container {
+        display: flex;
+    }
+    
+    .subscribe-element-container input[type=text] {
+        width: 50%;
+        padding: 12px 10px;
+        resize: vertical;
+        border-radius: 5px 0 0 5px;
+        color: #BDBDBD;
+        border: none;
+    }
+    
+    .subscribe-element-container input[type=submit] {
+        @include buttons.main-button-base-style(18px);
+        width: 20%;
+        padding: 12px 10px;
+        resize: vertical;
+        border-radius: 0 5px 5px 0;
+        border: none;
+    }
+    
+    .footer-separator {
+        width: 70%;
+        margin: 0 auto;
+        height: 1px;
+        background-color: #DDDDDD;
+    }
+    
+    .payment-methods-container {
+        width: 85%;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        padding: 30px 0;
+        gap: 80px;
+    }
+    
+    .payment-methods-icons-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .payment-methods-icons-container p {
+        width: 180px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    
+    .payment-methods-icons-container img {
+        object-fit: contain;
+    }
+    
+    .download-icons-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    
+    .download-icons-container p{
+        width: 141px;
+        font-size: 20px;
+        font-weight: 600;
+    }
+    
+    .sponsors-icons-container {
+        width: 85%;
+        margin: 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        padding-top: 30px;
+        padding-bottom: 60px;
+    }
+    
+    
+    .nav-element:hover {
+        color: rgba(5, 15, 25, 0.6);
+    }
+    
+    .auth-element:last-child:hover {
+        background-color: #2F80ED;
+        color: white;
+    }
+    
+    .goto-main-btn:hover {
+        background-color: rgba(47, 128, 237, 0.8);
+        cursor: pointer;
+    }
+    
+    .product-table-row td:last-child button:hover {
+        cursor: pointer;
+        background-color: rgba(255, 189, 0, 0.6);
+    }
+    
+    .single-blog-container a:hover {
+        color: rgba(47, 128, 237, 0.7);
+    }
+    
+    .sitemap-column-container a:hover {
+        text-decoration: underline;
+    }
+    
+    .sitemap-subscribe-container button:hover {
+        background-color: rgba(47, 128, 237, 0.8);
+        cursor: pointer;
+    }
+    
+    @media (max-width: 375px) {
+        .sitemap-container {
+            gap: 40px;
+        }
+        .left-sitemap-container {
+            gap: 40px;
+        }
+
+        .sitemap-column-container {
+            width: 40%;
+        }
+    
+        .right-sitemap-container {
+            width: 100%;
+
+            .subscribe-element-container input[type=text] {
+                width: 100%;
+            }
+        
+            .subscribe-element-container input[type=submit] {
+                width: 100%;
+            }
+        }
+    
+        .payment-methods-container {
+            gap: 40px;
+
+            .payment-methods-icons-container {
+                gap: 10px;
+    
+                p {
+                    width: 100%;
+                }
+            }
+        }
+        
+        .download-icons-container p {
+            width: 100%;
+        }
+    }
+}

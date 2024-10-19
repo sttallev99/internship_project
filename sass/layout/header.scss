@@ -1,0 +1,118 @@
+@use '../abstracts/colors';
+@use '../components/buttons';
+
+.hero-section {
+    width: 100%;
+    background-color: rgba(colors.$primary-color, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0.75rem 0;
+
+    .hero-items-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: 2.563rem;
+    }
+
+    .hero-item {
+        margin-right: 1.563rem;
+    }
+    
+    .hero-item-info-text {
+        font-weight: 600;
+        margin-right: 0.5rem;
+    }
+    
+    .hero-item-daily-price-diff.below {
+        color: colors.$red-text-color;
+    }
+    
+    .hero-item-daily-price-diff.above {
+        color: colors.$green-text-color;
+    }
+    
+    .hero.arrow {
+        height: 14px;
+    }
+}
+
+.main-navigation-section {
+    width: 80%;
+    margin: auto;
+    padding: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    align-items: center;
+
+    .main-nav-container {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .menu-icon {
+        display: none;
+    }
+    
+    .main-nav-container .main-nav {
+        align-items: center;
+    }
+    
+    .auth-nav {
+        display: flex;
+        align-items: center;
+    }
+    
+    .nav-element {
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: 600;
+        margin-right: 40px;
+    }
+    
+    .main-nav .nav-element:last-child {
+        margin-right: 3.125rem;
+    }
+    
+    .auth-nav {
+        border-left: 1px solid #DDDDDD;
+        height: 45px;
+    }
+    
+    .auth-element {
+        background-color: white;
+    }
+    
+    .auth-nav .auth-element:first-child {
+        padding-left: 50px;
+    }
+    
+    .auth-nav .auth-element:last-child {
+        @include buttons.secondary-button-base-style($padding: 0.7rem 2rem);
+    }
+
+    @media (max-width: 375px) {
+        .hero-items-container {
+            gap: 10px;
+        }
+    
+        .main-nav-container {
+            display: none;
+        }
+    
+        .menu-icon {
+            display: block;
+        }
+    }
+}
+
+.info-text {
+    background-color: #2F80ED;
+    color: white;
+    text-align: center;
+    padding: 12px 0;
+    font-weight: 700;
+    text-wrap: wrap;
+}

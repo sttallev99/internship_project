@@ -1,0 +1,33 @@
+@use '../utilities/container';
+
+.benefits-section {
+    .benefits-info {
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .benefits-main-container {
+        @include container.container-base-style;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 50px;
+    }
+    
+    .benefit-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 325px;
+    }
+    
+    .benefit-title {
+        margin-top: 20px;
+        font-size: 32px;
+    }
+    
+    .benefit-info {
+        margin-top: 8px;
+        text-align: center;
+    }
+}

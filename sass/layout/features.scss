@@ -1,0 +1,95 @@
+@use '../utilities/container';
+
+.features-section {
+    .features-info-text {
+        margin-top: 1.25rem;
+        text-align: center;
+    }
+    
+    .main-features-container {
+        @include container.container-base-style;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .left-section{
+        width: 40%;
+    }
+    
+    .right-section img {
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .feature-container {
+        display: flex;
+        margin-bottom: 30px;
+        gap: 30px;
+        justify-content: start;
+        align-items: center
+    }
+    
+    .feature-icon-container {
+        width: 80px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .feature-title {
+        font-size: 2rem;
+    }
+
+    .section-title {
+        margin-top: 5rem;
+        text-align: center;
+        font-size: 46px;
+        font-weight: 600;
+    }
+    
+    .features-info-text {
+        margin-top: 1.25rem;
+        text-align: center;
+    }
+    
+    .main-features-container {
+        width: 80%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 40px;
+        margin-bottom: 80px;
+    }
+    
+    .left-section{
+        width: 40%;
+    }
+    
+    .right-section img {
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .feature-container {
+        display: flex;
+        margin-bottom: 30px;
+        gap: 30px;
+        justify-content: start;
+        align-items: center
+    }
+    
+    .feature-icon-container {
+        width: 80px;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .feature-title {
+        font-size: 2rem;
+    }
+}

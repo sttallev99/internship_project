@@ -1,0 +1,29 @@
+@use 'abstracts/colors';
+@use 'base/reset';
+@use 'components/buttons';
+@use 'utilities/container';
+@use 'layout/header.scss';
+@use 'layout/goto.scss';
+@use 'layout/features.scss';
+@use 'layout/products.scss';
+@use 'layout/benefits.scss';
+@use 'layout/reviews.scss';
+@use 'layout/blog.scss';
+@use 'layout/footer.scss';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+
+.section-separator {
+    width: 40%;
+    margin: 0 auto;
+    height: 1px;
+    background-color: colors.$primary-color;
+    opacity: 30%;
+}
+
+.section-title {
+    margin-top: 5rem;
+    text-align: center;
+    font-size: 46px;
+    font-weight: 600;
+}
