@@ -1,5 +1,6 @@
 @use '../abstracts/colors';
 @use '../components/buttons';
+@use '../abstracts/media-query';
 
 .hero-section {
     width: 100%;
@@ -93,7 +94,7 @@
         @include buttons.secondary-button-base-style($padding: 0.7rem 2rem);
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: media-query.$phone-screen-m) {
         .hero-items-container {
             gap: 10px;
         }

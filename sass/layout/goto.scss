@@ -1,4 +1,5 @@
 @use '../components/buttons';
+@use '../abstracts/media-query';
 
 .goto-container {
     display: flex;
@@ -93,7 +94,7 @@
         z-index: 1;
     }
 
-    @media (max-width: 375px) {
+    @media (max-width: media-query.$phone-screen-m) {
         .goto-container {
             gap: 40px;
         }
