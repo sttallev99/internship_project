@@ -9,7 +9,7 @@
 
 @mixin secondary-button-base-style($padding) {
     border: 1px solid colors.$primary-color;
-    border-radius: 5px;
+    border-radius: 0.313rem;
     padding: $padding;
     color: colors.$primary-color;
 }

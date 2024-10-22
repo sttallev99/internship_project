@@ -1,0 +1,5 @@
+@mixin arrow($color, $rotationDeg: 0deg) {
+    color: $color;    
+    transform: rotate($rotationDeg);
+    width: 0.875rem;
+}

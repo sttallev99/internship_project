@@ -1,5 +1,6 @@
 @use '../abstracts/colors';
 @use '../components/buttons';
+@use '../components/arrow';
 @use '../abstracts/media-query';
 
 .hero-section {
@@ -33,19 +34,22 @@
         color: colors.$green-text-color;
     }
     
-    .hero.arrow {
-        height: 14px;
+    .down-arrow {
+        @include arrow.arrow($color: colors.$red-text-color, $rotationDeg: 180deg);
+    }
+
+    .up-arrow {
+        @include arrow.arrow($color: colors.$green-text-color, $rotationDeg: 00deg);
     }
 }
 
 .main-navigation-section {
     width: 80%;
     margin: auto;
-    padding: 20px 0;
+    padding: 1.25rem 0;
     display: flex;
     flex-wrap: wrap;
     justify-content:space-between;
-    align-items: center;
 
     .main-nav-container {
         display: flex;
@@ -57,12 +61,14 @@
         display: none;
     }
     
-    .main-nav-container .main-nav {
-        align-items: center;
+    .main-nav {
+        display: flex;
+        gap: 2.5rem;
     }
     
     .auth-nav {
         display: flex;
+        gap: 2.5rem;
         align-items: center;
     }
     
@@ -70,7 +76,6 @@
         text-decoration: none;
         cursor: pointer;
         font-weight: 600;
-        margin-right: 40px;
     }
     
     .main-nav .nav-element:last-child {
@@ -79,7 +84,7 @@
     
     .auth-nav {
         border-left: 1px solid #DDDDDD;
-        height: 45px;
+        height: 2.813rem;
     }
     
     .auth-element {
@@ -87,11 +92,15 @@
     }
     
     .auth-nav .auth-element:first-child {
-        padding-left: 50px;
+        padding-left: 3.125rem;
     }
     
     .auth-nav .auth-element:last-child {
         @include buttons.secondary-button-base-style($padding: 0.7rem 2rem);
+    }
+
+    .auth-icon {
+        display: none;
     }
 
     @media (max-width: media-query.$phone-screen-m) {
@@ -107,13 +116,23 @@
             display: block;
         }
     }
+
+
+    @media (max-width: media-query.$tablet-screen) {
+        .main-nav-container {
+            display: none;
+        }
+        .menu-icon {
+            display: block
+        }
+    }
 }
 
 .info-text {
     background-color: #2F80ED;
     color: white;
     text-align: center;
-    padding: 12px 0;
+    padding: 0.75rem 0;
     font-weight: 700;
     text-wrap: wrap;
 }

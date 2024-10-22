@@ -10,6 +10,7 @@
 @use 'layout/reviews.scss';
 @use 'layout/blog.scss';
 @use 'layout/footer.scss';
+@use 'abstracts/media-query';
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 
@@ -26,4 +27,15 @@
     text-align: center;
     font-size: 46px;
     font-weight: 600;
+}
+
+@media (max-width: 375px) {
+
+    body {
+        font-size: 14px;
+    }
+    .section-title {
+        font-size: 1.875rem;
+        margin-top: 3rem;
+    }
 }

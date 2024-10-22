@@ -3,7 +3,7 @@
 .benefits-section {
     .benefits-info {
         text-align: center;
-        margin-top: 20px;
+        margin-top:1.25rem;
     }
     
     .benefits-main-container {
@@ -11,23 +11,23 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        gap: 50px;
+        gap: 3.125rem;
     }
     
     .benefit-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 325px;
+        width: 20.313rem;
     }
     
     .benefit-title {
-        margin-top: 20px;
-        font-size: 32px;
+        margin-top: 1.25rem;
+        font-size: 2rem;
     }
     
     .benefit-info {
-        margin-top: 8px;
+        margin-top: 0.5rem;
         text-align: center;
     }
 }

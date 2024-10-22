@@ -2,10 +2,14 @@
 @use '../abstracts/media-query';
 
 .products-section {
+    .product-table-container {
+        overflow-x: scroll;
+    }
+    
     .product-table {
         @include container.container-base-style;
         border-collapse: collapse;
-        border-radius: 5px;
+        border-radius: 0.313rem;
         border-style: hidden;
         box-shadow: 0 0 0 1px rgba(47, 128, 237, 30%);
         
@@ -14,7 +18,7 @@
     .product-table-header th {
         font-weight: 400;
         color: #828282;
-        padding: 12px 0;
+        padding: 0.75rem 0;
     }
     
     .product-table th, td {
@@ -22,7 +26,7 @@
     }
     
     .product-table-row  td {
-        padding: 18px 0;
+        padding: 1.125rem 0.625rem;
         text-align: center;
         vertical-align: middle;
     }
@@ -32,25 +36,22 @@
     }
     
     .product-table-row td:last-child button {
-        padding: 10px 30px;
-        font-size: 18px;
+        padding: 0.625rem 1.875rem;
+        font-size: 1.125rem;
         font-weight: 600;
         background-color: #FFBD00;
         color: white;
-        border-radius: 5px;
+        border-radius: 0.313rem;
     }
 
     @media (max-width: media-query.$phone-screen-m) {
-        .product-table tr td:nth-child(4),  .product-table tr th:nth-child(4){
-            display: none;
-        }
-    
+
         .product-table {
             box-shadow: none;
         }
     
         .sitemap-container {
-            gap: 40px;
+            gap: 2.5rem;
         }
     }
 }
