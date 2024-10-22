@@ -2,6 +2,12 @@
 @use '../abstracts/media-query';
 
 .features-section {
+
+    .features-info-text {
+        margin-top: 1.25rem;
+        text-align: center;
+    }
+
     .features-info-text {
         margin-top: 1.25rem;
         text-align: center;
@@ -22,48 +28,36 @@
                 gap: 1.875rem;
                 justify-content: center;
                 align-items: center;
+
+                .feature-icon-container img{
+                    width: 70px;
+                    height: 70px;
+                }
             }
         }
-    }
-    
-    .right-section img {
-        object-fit: contain;
-        width: 100%;
-        height: auto;
-    }
-    
-    
-    
-    .feature-icon-container img{
-        width: 70px;
-        height: 70px;
-    }
-    
-    .features-info-text {
-        margin-top: 1.25rem;
-        text-align: center;
-    }
-    
 
-    .left-section{
-        width: 40%;
-    }
-    
-    .right-section img {
-        object-fit: contain;
-        width: 100%;
-        height: 100%;
-    }
-
-    @media (max-width: media-query.$phone-screen-m) {
-        .left-section {
+        .right-section img {
+            object-fit: contain;
             width: 100%;
-        }
-    }
+            height: auto;
 
-    @media (max-width: media-query.$tablet-screen) {
-        .main-features-container {
-            justify-content: space-evenly;
+            .right-section img {
+                object-fit: contain;
+                width: 100%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: media-query.$phone-screen-m) {
+            .left-section {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: media-query.$tablet-screen) {
+            .left-section {
+                width: 80%;
+            }
         }
     }
 }
