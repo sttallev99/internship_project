@@ -61,8 +61,8 @@ function task02_search(arr) {
 
 // searching for an increasing sequence of maximum length in the original array.
 function task03_selection(arr) {
-    longest_seq_lenght = 0;
-    increasing_seq = [];
+    let longest_seq_lenght = 0;
+    let increasing_seq = [];
 
     for (let num of arr) {
         if(increasing_seq.length == 0) {
@@ -79,10 +79,10 @@ function task03_selection(arr) {
             }
         }
     }
-    console.log(`increasing sequence of maximum length is: ${longest_seq_lenght}`);
+    console.log(`increasing sequence of maximum length is: ${Math.max(longest_seq_lenght, increasing_seq.length)}`);
 }
 
-function task04_dateFormatter(inp) {
+function task04_dateFormatter() {
     class DateParser {
         #monthNames
 
@@ -99,7 +99,7 @@ function task04_dateFormatter(inp) {
             const validateData = (month, day) => {
                 month = Number(month);
                 day = Number(day);
-                if((month < 1 || month > 11) || (day < 1 || day > 31)) {
+                if((month < 1 || month > 12) || (day < 1 || day > 31)) {
                     return {success: false, message: 'Invalid day or month'}
                 }
                 else {
@@ -262,13 +262,97 @@ function task04_dateFormatter(inp) {
         }
     }
 
-    const test = new DateParser('01102024', 'DDMMYYYY');
+    const test = new DateParser('30102024', 'DDMMYYYY');
     const output = test.format('Month D, Yr');
     console.log(output);
     test.fromNow()
 }
 
+function task05_textFormatter(input, maxLineSize = Infinity, maxNewLines = Infinity, formatType = 'word wrap') {
+    
+    switch (formatType) {
+        case 'word wrap':
+            return wordWrap(input, maxLineSize);
+        case 'symbol wrap':
+            return symbolWrap(input, maxLineSize);
+        case 'sentence wrap':
+            return sentanceWrap(input, maxLineSize);
+        case 'no wrap':
+            return input;
+        default:
+            return input;
+    }
 
-task04_dateFormatter()
+    function getLines(text) {
+        if(maxNewLines != Infinity) {
+            const lines = text.split('\n').slice(0, maxNewLines);
+            return lines.join('\n');
+        } else {
+            return text
+        }
+    }
 
+    function wordWrap(text, maxLineSize) {
+        const words = text.split(' ');
+        let wrappedText = '';
+        let currentLine = '';
+
+        words.forEach(word => {
+            if (currentLine.length + word.length + 1 > maxLineSize) {
+                wrappedText += currentLine.trim() + '\n';
+                currentLine = ''
+            }
+            currentLine += (currentLine.length ? ' ' : '') + word;
+        });
+
+        wrappedText += currentLine.trim();
+        return getLines(wrappedText);
+    }
+
+    function symbolWrap(text, maxLineSize) {
+        words = text.split(' ');
+        wrappedText = "";
+        currentLine = "";
+
+        words.forEach(word => {
+
+            if (currentLine.length + word.length + 1 > maxLineSize) {
+                let leftSpace = maxLineSize - currentLine.length;
+                
+                if(leftSpace == 0) {
+                    wrappedText += currentLine + "\n"
+                    currentLine = "";
+                } else if(leftSpace <= 2) {
+                    wrappedText += currentLine + " \n";
+                    currentLine = "";
+                } else {
+                    word_symbols_old_line = word.slice(0, leftSpace - 2)
+                    word_symbold_new_line = word.slice(leftSpace - 2)
+                    wrappedText += currentLine + ` ${word_symbols_old_line}-\n`;
+                    currentLine = `${word_symbold_new_line}`
+                }
+            }
+            currentLine += (currentLine.length ? " " : "") + word
+        });
+
+        wrappedText += currentLine.trim();
+        return getLines(wrappedText);
+    }
+
+    function sentanceWrap(text, maxLineSize) {
+        sentances = text.split(/(?<=[.!?])\s+/);
+        let wrappedText = '';
+
+        sentances.forEach(sentance => {
+            wrappedText += wordWrap(sentance, maxLineSize) + '\n';
+        });
+
+        return getLines(wrappedText.trim());
+    }
+}
+
+
+
+const formatedText = task05_textFormatter("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", 40, 4, 'sentence wrap');
+console.log(formatedText)
 
