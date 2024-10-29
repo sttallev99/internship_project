@@ -351,8 +351,103 @@ function task05_textFormatter(input, maxLineSize = Infinity, maxNewLines = Infin
     }
 }
 
+function task06_stringCalculator() {
+    const Calculator = {
+        calculateExpression: function(expression) {
+            const tokens = this.tokenize(expression);
+            const postfix = this.infixToPostfix(tokens);
+            return this.evaluatePostfix(postfix).toString();
+        },
+    
+        tokenize: function(expression) {
+            const regex = /\s*([\+\-\*\/\(\)]|[0-9]*\.?[0-9]+)\s*/g;
+            const tokens = [];
+            let match;
+            while ((match = regex.exec(expression)) !== null) {
+                tokens.push(match[1]);
+            }
+            return tokens;
+        },
+    
+        infixToPostfix: function(tokens) {
+            const output = [];
+            const operators = [];
+            
+            const precedence = (op) => {
+                if (op === '+' || op === '-') return 1;
+                if (op === '*' || op === '/') return 2;
+                return 0;
+            };
+    
+            for (const token of tokens) {
+                if (!isNaN(token)) {
+                    output.push(parseFloat(token));
+                } else if (token === '(') {
+                    operators.push(token);
+                } else if (token === ')') {
+                    while (operators.length && operators[operators.length - 1] !== '(') {
+                        output.push(operators.pop());
+                    }
+                    operators.pop();
+                } else if (this.isOperator(token)) {
+                    while (operators.length && precedence(operators[operators.length - 1]) >= precedence(token)) {
+                        output.push(operators.pop());
+                    }
+                    operators.push(token);
+                }
+            }
+    
+            while (operators.length) {
+                output.push(operators.pop());
+            }
+    
+            return output;
+        },
+    
+        evaluatePostfix: function(postfix) {
+            const stack = [];
+    
+            for (const token of postfix) {
+                if (typeof token === 'number') {
+                    stack.push(token);
+                } else if (this.isOperator(token)) {
+                    const b = stack.pop();
+                    const a = stack.pop();
+                    switch (token) {
+                        case '+':
+                            stack.push(a + b);
+                            break;
+                        case '-':
+                            stack.push(a - b);
+                            break;
+                        case '*':
+                            stack.push(a * b);
+                            break;
+                        case '/':
+                            if (b === 0) throw new Error("Division by zero is not allowed.");
+                            stack.push(a / b);
+                            break;
+                    }
+                }
+            }
+    
+            return stack.pop();
+        },
+    
+        isOperator: function(token) {
+            return ['+', '-', '*', '/'].includes(token);
+        }
+    };
+    
+    try {
+        console.log(Calculator.calculateExpression("(1 + 2) * 3 - (4 / 2)")); // "7"
+    } catch (error) {
+        console.error(error.message);
+    }
+    
+} 
 
+// const formatedText = task05_textFormatter("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", 40, 4, 'sentence wrap');
+// console.log(formatedText)
 
-const formatedText = task05_textFormatter("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", 40, 4, 'sentence wrap');
-console.log(formatedText)
-
+task06_stringCalculator()
