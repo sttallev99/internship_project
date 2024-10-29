@@ -440,14 +440,94 @@ function task06_stringCalculator() {
     };
     
     try {
-        console.log(Calculator.calculateExpression("(1 + 2) * 3 - (4 / 2)")); // "7"
+        console.log(Calculator.calculateExpression("(1 + 2) * 3 - (4 / 2)")); 
     } catch (error) {
         console.error(error.message);
     }
     
-} 
+}
+
+function task07_arraySorter() {
+    const sorter = {
+        selectionSort: (arr) => {
+            for(let i = 0; i < arr.length - 1; i++) {
+                min_idx = i;
+
+                for(let j = i + 1; j < arr.length; j++) {
+                    if(arr[j] < arr[min_idx]) {
+                        min_idx = j
+                    }
+                }
+
+                [arr[i], arr[min_idx]] = [arr[min_idx], arr[i]]
+            }
+
+            return arr;
+        },
+
+        bubbleSort: (arr) => {
+            let swapped;
+            for(let i = 0; i < arr.length - 1; i++) {
+                swapped = false;
+
+                for(let j = 0; j < arr.length - i - 1; j++) {
+                    if (arr[j] > arr[j + 1]) {
+                        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+                        swapped = true;
+                    }
+                }
+
+                if (!swapped) {
+                    break;
+                }
+            }
+
+            return arr;
+        },
+
+        insertionSort: (arr) => {
+            for (let i = 1; i < arr.length; i++) {
+                let currentNum = arr[i];
+                let j = i - 1;
+
+                while (j >= 0 && arr[j] > currentNum) {
+                    arr[j + 1] = arr[j];
+                    j -= 1;
+                }
+
+                arr[j + 1] = currentNum;
+            }
+            console.log(arr)
+        },
+        quickSort: function(arr) {
+
+            if (arr.length <= 1) {
+                return arr;
+            }
+
+            let pivot = arr[0];
+            let left = [];
+            let right = [];
+
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] < pivot) {
+                    left.push(arr[i]);
+                } else {
+                    right.push(arr[i]);
+                }
+            }
+
+            return [...this.quickSort(left), pivot, ...this.quickSort(right)]
+        }
+    }
+
+    const result = sorter.quickSort([5, 6, 1, 3]);
+    console.log(result)
+}
 
 // const formatedText = task05_textFormatter("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", 40, 4, 'sentence wrap');
 // console.log(formatedText)
 
-task06_stringCalculator()
+// task06_stringCalculator()
+
+task07_arraySorter()
