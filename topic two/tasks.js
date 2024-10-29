@@ -525,9 +525,25 @@ function task07_arraySorter() {
     console.log(result)
 }
 
+function task08_binaryConverter() {
+    const binaryConverter = {
+        converte: (inp, outputNumSystem) => {
+            if (typeof(inp) === 'string') {
+                return parseInt(inp, outputNumSystem);
+            } else if (typeof(inp) == 'number') {
+                return inp.toString(outputNumSystem);
+            }
+        }
+    }
+
+    const result = binaryConverter.converte("1010", 2);
+    console.log(result)
+}
+
+
 // const formatedText = task05_textFormatter("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", 40, 4, 'sentence wrap');
 // console.log(formatedText)
 
 // task06_stringCalculator()
 
-task07_arraySorter()
+task08_binaryConverter()
