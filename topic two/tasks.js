@@ -4,6 +4,10 @@ function task01_getMaxSubSum(arr) {
     let currSum = 0;
 
     for(let currNum of arr) {
+        if(typeof(currNum) !== 'number') {
+            currSum = 0
+            continue;
+        }
         currSum += currNum;
         
         if (currSum > maxSum) {
@@ -23,8 +27,15 @@ function task01_getMaxSubSum_NOT_OPTIMAZED(arr) {
     let maxSum = 0;
     for (let i = 0; i < arr.length; i++) {
         let currSum = 0;
+        if (typeof(arr[i]) != 'number') {
+            continue;
+        }
         for (let j = i; j < arr.length; j++) {
             currSum += arr[j];
+            if (typeof(arr[j]) !== 'number') {
+                currSum = 0
+                continue;
+            }
             maxSum = Math.max(maxSum, currSum);
         }
     }
@@ -50,13 +61,9 @@ function task02_search(arr) {
         }
     }
 
-    median_value = total_sum / arr.length;
+    median_value = (total_sum / arr.length).toFixed(2);
 
-    console.log(`
-        Minimum value is: ${min_elem}
-        Maximum value is: ${max_elem}
-        Median valie is: ${median_value}
-    `)
+    return `Minimum value is: ${min_elem}\nMaximum value is: ${max_elem}\nMedian valie is: ${median_value}`
 }
 
 // searching for an increasing sequence of maximum length in the original array.
@@ -73,13 +80,14 @@ function task03_selection(arr) {
             } else {
                 if (increasing_seq.length > longest_seq_lenght) {
                     longest_seq_lenght = increasing_seq.length;
+                } else {
+                    increasing_seq = []
+                    increasing_seq.unshift(num)
                 }
-                increasing_seq = []
-                increasing_seq.unshift(num)
             }
         }
     }
-    console.log(`increasing sequence of maximum length is: ${Math.max(longest_seq_lenght, increasing_seq.length)}`);
+    return`increasing sequence of maximum length is: ${Math.max(longest_seq_lenght, increasing_seq.length)}`;
 }
 
 function task04_dateFormatter() {
@@ -96,16 +104,6 @@ function task04_dateFormatter() {
             ]
 
             const createDate = (year, month, day) => new Date(year, month - 1, day);
-            const validateData = (month, day) => {
-                month = Number(month);
-                day = Number(day);
-                if((month < 1 || month > 12) || (day < 1 || day > 31)) {
-                    return {success: false, message: 'Invalid day or month'}
-                }
-                else {
-                    return {success: true, message: ''}
-                }
-            }
             const getDateValues = () => {
                 let year = this.date.getFullYear();
                 let month = this.date.getMonth() + 1;
@@ -129,11 +127,6 @@ function task04_dateFormatter() {
                         const year = this.dateInp.slice(0, 4);
                         const month = this.dateInp.slice(4, 6);
                         const day = this.dateInp.slice(6);
-                        const {success, message} = validateData(month, day);
-                        if(!success) {
-                            console.log(message);
-                            return;
-                        }
                         this.date = createDate(year, month, day);
                     }
                 },
@@ -143,13 +136,6 @@ function task04_dateFormatter() {
                         return `${year}-${month}-${day}`
                     } else {
                         const [year, month, day] = this.dateInp.split('-');
-                        const {success, message} = validateData(month, day);
-
-                        if(!success) {
-                            console.log(message);
-                            return;
-                        }
-
                         this.date = createDate(year, month, day);
                     }
                 },
@@ -161,11 +147,6 @@ function task04_dateFormatter() {
                         const day = this.dateInp.slice(0, 2);
                         const month = this.dateInp.slice(2, 4);
                         const year = this.dateInp.slice(4);
-                        const {success, message} = validateData(month, day);
-                        if (!success) {
-                            console.log(message);
-                            return
-                        }
 
                         this.date = createDate(year, month, day);
                     }
@@ -192,13 +173,6 @@ function task04_dateFormatter() {
                             monthIndex = this.#monthNames.indexOf(month) + 1;
                         }
 
-                        const {success, message} = validateData(monthIndex, day);
-
-                        if (!success) {
-                            console.log(message);
-                            return;
-                        }
-
                         this.date = createDate(year, monthIndex, day);
                     }
                 }
@@ -212,15 +186,10 @@ function task04_dateFormatter() {
                     return;
                 } else {
                     if (inpType === 'string') {
-                        if(dateInp.length < 8) {
-                            console.log('Incorect date length please use valid date.');
-                            return
-                        }
-
                         if (this.dateFormarts.hasOwnProperty(this.inpFormat)) {
                             this.dateFormarts[this.inpFormat]();
                         } else {
-                            console.log(`Incorect format type: Please check valid format types [${Object.keys(dateFormarts)}]`)
+                            throw new Error(`Incorect format type: Please check valid format types [${Object.keys(this.dateFormarts)}]`)
                         }
                     } else if(inpType === 'number') {
                         this.date = new Date(this.dateInp);
@@ -229,8 +198,11 @@ function task04_dateFormatter() {
 
                 
             }
-            
-            this.formatInput();
+            try {
+                this.formatInput();
+            } catch(err) {
+                return err
+            }
         }
 
 
@@ -238,7 +210,7 @@ function task04_dateFormatter() {
             if(this.dateFormarts.hasOwnProperty(outputFormat)) {
                 return this.dateFormarts[outputFormat]();
             } else {
-                console.log(`Incorect format type: Please check valid format types [${Object.keys(dateFormarts)}]`)
+                console.log(`Incorect format type: Please check valid format types [${Object.keys(this.dateFormarts)}]`)
             }
         }
 
@@ -248,24 +220,27 @@ function task04_dateFormatter() {
             const oneDay = 1000 * 60 * 60 * 24;
             const oneHour = 1000 * 60 * 60
 
-            let resultInDays = Math.round((currentDate.getTime() - oldDate.getTime()) / oneDay);
+            let resultInDays = Math.floor((currentDate.getTime() - oldDate.getTime()) / oneDay);
+            let resultInHours = Math.floor((currentDate.getTime() - oldDate.getTime()) / oneHour);
+            if (resultInDays < 0) {
+                return 'Please do not use future dates.'
+            }
 
             if (resultInDays >= 365) {
                 const years = currentDate.getFullYear() - oldDate.getFullYear();
-                console.log(`${years} year${years > 1 ? 's' : ''} ago`);
+                return`${years} year${years > 1 ? 's' : ''} ago`;
             } else if (resultInDays >= 31) {
                 const months = currentDate.getMonth() - oldDate.getMonth();
-                console.log(`${months} month${months > 1 ? 's' : ''} ago`);
+                return`${months} month${months > 1 ? 's' : ''} ago`;
             } else if (resultInDays <= 31) {
-                console.log(`${resultInDays} day${resultInDays > 1 ? 's' : ''} ago`)
+                if (resultInDays == 0) {
+                    return`${resultInHours} hour${resultInHours > 1 ? 's' : ''} ago`;
+                }
+                return`${resultInDays} day${resultInDays > 1 ? 's' : ''} ago`;
             }
         }
     }
-
-    const test = new DateParser('30102024', 'DDMMYYYY');
-    const output = test.format('Month D, Yr');
-    console.log(output);
-    test.fromNow()
+    return DateParser;
 }
 
 function task05_textFormatter(input, maxLineSize = Infinity, maxNewLines = Infinity, formatType = 'word wrap') {
@@ -431,7 +406,7 @@ function task06_stringCalculator() {
                 }
             }
     
-            return stack.pop();
+            return (stack.pop()).toFixed(2);
         },
     
         isOperator: function(token) {
@@ -440,7 +415,9 @@ function task06_stringCalculator() {
     };
     
     try {
-        console.log(Calculator.calculateExpression("(1 + 2) * 3 - (4 / 2)")); 
+        const result = Calculator.calculateExpression("(1.3 + 222) * 3 - (4 / 2)");
+        console.log(result)
+        return result; 
     } catch (error) {
         console.error(error.message);
     }
@@ -497,7 +474,7 @@ function task07_arraySorter() {
 
                 arr[j + 1] = currentNum;
             }
-            console.log(arr)
+            return arr
         },
         quickSort: function(arr) {
 
@@ -521,29 +498,29 @@ function task07_arraySorter() {
         }
     }
 
-    const result = sorter.quickSort([5, 6, 1, 3]);
-    console.log(result)
+    return sorter;
 }
 
 function task08_binaryConverter() {
     const binaryConverter = {
         converte: (inp, outputNumSystem) => {
-            if (typeof(inp) === 'string') {
-                return parseInt(inp, outputNumSystem);
-            } else if (typeof(inp) == 'number') {
-                return inp.toString(outputNumSystem);
-            }
+            return BigInt(inp).toString(outputNumSystem);
         }
     }
-
-    const result = binaryConverter.converte("1010", 2);
-    console.log(result)
+    const test = binaryConverter.converte(90071992547409913333n, 2)
+    console.log(test)
+    return binaryConverter;
 }
 
 
-// const formatedText = task05_textFormatter("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", 40, 4, 'sentence wrap');
-// console.log(formatedText)
-
-// task06_stringCalculator()
-
-task08_binaryConverter()
+module.exports = {
+    task01_getMaxSubSum,
+    task01_getMaxSubSum_NOT_OPTIMAZED,
+    task02_search,
+    task03_selection,
+    task04_dateFormatter,
+    task05_textFormatter,
+    task06_stringCalculator,
+    task07_arraySorter,
+    task08_binaryConverter
+}
