@@ -81,7 +81,7 @@ describe('all tests', () => {
 
     describe('task_05', () => {
         test('get formated text when pass args to function like - (text, 40, 5, word wrap)', () => {
-            text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+            let text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
             const result = task05_textFormatter(text, 40, 5, 'word wrap');
             expect(result).toMatch(`Lorem Ipsum is simply dummy text of the
 printing and typesetting industry. Lorem
@@ -89,7 +89,7 @@ Ipsum has been the industry's standard
 dummy text ever since the 1500s`)
         });
         test('get formated text when pass args to function like - (text, 40, 5, symbol wrap', () => {
-            text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+            let text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
             const result = task05_textFormatter(text, 40, 5, 'symbol wrap');
             expect(result).toMatch(`Lorem Ipsum is simply dummy text of the 
 printing and typesetting industry. Lorem
@@ -97,7 +97,7 @@ Ipsum has been the industry's standard
 dummy text ever since the 1500s`);
         });
         test('get formated text when pass args to function like - (text, 40, 5, sentance wrap', () => {
-            text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+            let text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
             result = task05_textFormatter(text, 40, 5, 'sentence wrap');
             expect(result).toMatch(`Lorem Ipsum is simply dummy text of the
 printing and typesetting industry.
@@ -105,12 +105,12 @@ Lorem Ipsum has been the industry's
 standard dummy text ever since the 1500s`)
         });
         test('get formated text when pass args to function like - (text, 40, 5, sentance wrap', () => {
-            text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+            let text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
             result = task05_textFormatter(text, 40, 5, 'no wrap');
             expect(result).toMatch("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s")
         });
         test('get unformated input if we pass unexisting text formatting type', () => {
-            text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
+            let text = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"
             result = task05_textFormatter(text, 40, 5, 'test');
             expect(result).toMatch(text)
         })
