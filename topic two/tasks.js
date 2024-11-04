@@ -414,13 +414,15 @@ function task06_stringCalculator() {
         }
     };
     
-    try {
-        const result = Calculator.calculateExpression("(1.3 + 222) * 3 - (4 / 2)");
-        console.log(result)
-        return result; 
-    } catch (error) {
-        console.error(error.message);
-    }
+    // try {
+    //     const result = Calculator.calculateExpression("(1.3 + 222) * 3 - (4 / 0)");
+    //     console.log(result)
+    //     return result; 
+    // } catch (error) {
+    //     console.error(error.message);
+    // }
+
+    return Calculator;
     
 }
 
