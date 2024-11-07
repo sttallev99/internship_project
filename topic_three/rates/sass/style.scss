@@ -1,0 +1,55 @@
+.values{
+    display: flex;
+    width: 70%;
+    margin: 0 auto;
+    justify-content: space-evenly;
+}
+
+.currency-container {
+    display: flex;
+    gap: 50px;
+    align-items: center;
+}
+
+.base-currency-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.desired-currences-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.currency-inp{
+    border: none;
+    border-bottom: 2px solid gray;
+    padding: 10px 12px;
+    font-size: 20px;
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+.main-btn {
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.rates-info-container {
+    width: 250px;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+.rates-info-container, td {
+    border: 1px solid black;
+}
+

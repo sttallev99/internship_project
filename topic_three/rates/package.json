@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "test": "jest",
-    "build": "webpack --watch"
+    "build": "webpack --watch",
+    "sass": "sass --watch ./sass/style.scss:./src/style.css"
   },
   "keywords": [],
   "author": "",
