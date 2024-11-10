@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.pokemons-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    cursor: pointer;
+
+    .single-pokemon-container {
+        .pokemon-img {
+            width: 100px;
+            height: auto;
+        }
+        .pokemon-name {
+            text-align: center;
+            font-weight: bold;
+        }
+        .evoluations-names-container {
+            margin-top: 10px;
+            p:first-child {
+                margin-bottom: 5px;
+                font-style: italic;
+            }
+            p {
+                text-align: center;
+            }
+        }
+    }
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    gap: 20px;
+
+    .prev-btn {
+        padding: 10px;
+    }
+
+    .next-btn {
+        padding: 10px;
+    }
+}
