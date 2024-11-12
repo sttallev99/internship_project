@@ -28,10 +28,6 @@
     font-size: 20px;
 }
 
-.hidden{
-    visibility: hidden;
-}
-
 .main-btn {
     padding: 10px 20px;
     border-radius: 5px;
@@ -40,6 +36,10 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
+}
+
+.main-btn:disabled {
+    background-color: black;
 }
 
 .rates-info-container {

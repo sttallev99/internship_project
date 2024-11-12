@@ -3,7 +3,15 @@ import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
 import currencyapi from '@everapi/currencyapi-js';
 import './style.css';
 
+const calendarEl = document.querySelector('.calendar');
+const formEl = document.querySelector('.currency-container');
+const baseCurrencyImp = document.querySelector('.base-currency-inp');
+const desiredCurrenciesImp = document.querySelector('.desired_currency-inp');
+const ratesTableEl = document.querySelector('.rates-info-container');
 let datesArr;
+let baseCurrency;
+let desiredCurrArr;
+
 
 function showCalendar() {
     const options =  {
@@ -19,12 +27,24 @@ function showCalendar() {
         }
     };
 
-    const calendar = new VanillaCalendar('.calendar-container', options);
+    const calendar = new VanillaCalendar('.calendar', options);
     calendar.init();
     return calendar;
 }
 
-function validateCurrency(inp) {
+function setError(element, message) {
+    const inputControl = element.parentElement;
+    const errorDisplay = inputControl.querySelector('.error');
+    errorDisplay.innerHTML = message;
+}
+
+function setSuccess(element) {
+    const inputControl = element.parentElement;
+    const errorDisplay = inputControl.querySelector('.error');
+    errorDisplay.innerHTML = '';
+}
+
+export function validateInput(inp) {
     return inp.split(',').map(curr => {
         if(!allCurrencies.includes(curr.trim())) {
             throw new Error(`Currency type ${curr} do not exist`);
@@ -34,43 +54,23 @@ function validateCurrency(inp) {
     });
 }
 
-function handleBaseCurrencyInp(event) {
-    if(!baseCurrInfoTextEl.classList.contains('hidden')) {
-        baseCurrInfoTextEl.classList.add('hidden');
-    }
-    
-    try {
-        validateCurrency(event.target.value);
-        baseCurrency = event.target.value;
-    } catch(e) {
-        baseCurrInfoTextEl.classList.remove('hidden')
-    }
-}
+export function validateTime(timesArr) {
+    const timeNow = new Date().getTime();
 
-function handleDesiredCurrenciesInp(event) {
-    try {
-        desiredCurrArr = validateCurrency(event.target.value);
-        desiredCurrInfoTextEl.innerHTML = 'Please select one or more cyrencies separeted with coma.'
-    }catch(err) {
-        desiredCurrInfoTextEl.innerHTML = err.message;
-    }
-}
-
-function handleInpValues(event) {
-    if(event.target.classList.contains('base-currency-inp')){
-        handleBaseCurrencyInp(event);
-    }else if(event.target.classList.contains('desired_currency-inp')) {
-        handleDesiredCurrenciesInp(event);
-    }
+    timesArr.forEach(t => {
+        const currTime = new Date(t).getTime();
+        if(currTime > timeNow) {
+            throw new Error('Please select dates in the past.')
+        }
+    });
+    return timesArr
 }
 
 function createTableHeader(desiredCurrArr) {
-    console.log(desiredCurrArr)
     let headerRow = document.createElement('tr');
     let dateCell = document.createElement('td');
     dateCell.innerHTML = 'date';
     headerRow.appendChild(dateCell);
-    console.log(headerRow)
     desiredCurrArr.forEach(curr => {
         let currNameCell = document.createElement('td');
         currNameCell.innerHTML = curr
@@ -95,45 +95,60 @@ function createRow(date, currenciesData) {
     return tableRow;
 }
 
-const client = new currencyapi('cur_live_pro1rckdb5h6OaQgFOsg4Kmdz3baJPtYcPfnM4O0')
+let client = new currencyapi(process.env.API_TOKEN)
 let allCurrencies = await client.currencies();
 allCurrencies = Object.keys(allCurrencies.data);
 
-const inputElArr = document.querySelectorAll('.currency-inp');
-const baseCurrInfoTextEl = document.querySelector('.base-currency-info-text');
-const desiredCurrInfoTextEl = document.querySelector('.desired-curencies-info-text');
-const actionBtnEl = document.querySelector('.main-btn');
-const ratesTableEl = document.querySelector('.rates-info-container');
-let baseCurrency;
-let desiredCurrArr;
 
-
-
-inputElArr.forEach(el => el.addEventListener('blur', handleInpValues))
-
-inputElArr[0].addEventListener('focus', (e) => {
-    e.target.value = '';
-});
-
-actionBtnEl.addEventListener('click', () => {
+formEl.addEventListener('submit', (e) => {
+    e.preventDefault();
+    try {
+        datesArr = validateTime(datesArr);
+        setSuccess(calendarEl)
+    } catch(err) {
+        setError(calendarEl, err.message);
+        return
+    }
+    try {
+        baseCurrency = validateInput(baseCurrencyImp.value);
+        setSuccess(baseCurrencyImp)
+    } catch(err) {
+        setError(baseCurrencyImp, err.message);
+        return
+    }
+    try {
+        desiredCurrArr = validateInput(desiredCurrenciesImp.value);
+        setSuccess(desiredCurrenciesImp)
+    } catch(err) {
+        setError(desiredCurrenciesImp, err.message)
+        return
+    }
+    ratesTableEl.innerHTML = '';
     const tableHeaderEl = createTableHeader(desiredCurrArr);
     ratesTableEl.appendChild(tableHeaderEl);
 
-    datesArr.forEach(currDate => {
-        client.historical({
-            date: currDate,
+    const datesPromisify = datesArr.map(d => {
+        return client.historical({
+            date: d,
             base_currency: baseCurrency,
             currencies: desiredCurrArr
-        }).then(response => {
-            let currRow = createRow(currDate, response.data)
+        })
+    });
+
+    const allPromises = Promise.all(datesPromisify);
+
+    allPromises
+    .then(result => {
+        result.forEach(currRecord => {
+            console.log(currRecord)
+            const currDate = currRecord.meta.last_updated_at.split('T')[0];
+            console.log(currDate)
+            const currRow = createRow(currDate, currRecord.data)
             ratesTableEl.appendChild(currRow);
-        });
+        })
     })
 });
 
 
 showCalendar();
 
-module.exports = {
-    showCalendar
-}
