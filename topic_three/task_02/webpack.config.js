@@ -6,10 +6,14 @@ const __dirname = path.dirname(__filename);
 
 export default{
     mode: "development",
-    entry: './src/index.js',
+    entry: {
+        index: './src/index.js',
+        details: './src/details.js'
+    },
+    // entry: ['./src/index.js'],
     output: {
-        filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
+        filename: '[name]/dist/[name]bundle.js',
     },
     module: {
         rules: [

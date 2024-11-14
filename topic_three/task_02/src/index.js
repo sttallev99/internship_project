@@ -1,61 +1,10 @@
 import '../sass/style.scss';
+import { pokemonApi } from './api_client.js';
 
 let pokemonData = [];
 let currPage = 0;
 let limit = 8;
-
-async function getPokemons(offset) {
-    const query = `
-        query GetPokemons($offset: Int!, $limit: Int!) {
-            pokemons(offset: $offset, limit: $limit) {
-                results {
-                name
-                image
-                url
-                id
-                }
-                next,
-                previous
-            }
-        }
-    `;
-
-    const response = await fetch('https://graphql-pokeapi.graphcdn.app/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            query,
-            variables: { offset, limit }
-        })
-    });
-
-    const data = await response.json();
-    return data.data.pokemons;
-}
-
-async function getEvolutionChain(pokemonUrl) {
-    const pokemonResponse = await fetch(pokemonUrl);
-    const pokemonData = await pokemonResponse.json();
-
-    const speciesResponse = await fetch(pokemonData.species.url);
-    const speciesData = await speciesResponse.json();
-
-    const evolutionChainUrl = speciesData.evolution_chain.url;
-
-    const evolutionResponse = await fetch(evolutionChainUrl);
-    const evolutionData = await evolutionResponse.json();
-
-    const evolutions = [];
-    let current = evolutionData.chain;
-
-    while(current) {
-        evolutions.push(current.species.name);
-        current = current.evolves_to[0];
-    }
-    console.log(evolutions)
-    return evolutions;
-}
-
+ 
 function loadEvolutionNames( evolutionNames, pokemonName) {
     const pokemonNameIndex = evolutionNames.indexOf(pokemonName);
     evolutionNames = evolutionNames.splice(pokemonNameIndex);
@@ -84,16 +33,17 @@ async function loadData(page) {
 
     currPage = page;
     let offset = page * limit;
-    const pokemons = await getPokemons(offset);
+    const pokemons = await pokemonApi.getPokemons(offset, limit);
     pokemonData = pokemons.results;
 
     const pokemonContainerElement = document.querySelector('.pokemons-container');
     pokemonContainerElement.innerHTML = '';
 
     const evoluationNamesPromisify = pokemons.results.map(async p => {
-        return await getEvolutionChain(p.url)
+        return await pokemonApi.getEvolutionChain(p.url)
     });
     const evolutionNamesResult = await Promise.all(evoluationNamesPromisify);
+    console.log(evolutionNamesResult);
 
     for(const [key, value] of Object.entries(pokemons.results)) {
         const pokemon = value

@@ -6,7 +6,6 @@ describe('test for data validation', () => {
     let mockOne;
     let mockTwo;
     beforeEach(() => {
-        console.log('test')
         mockOne = jest.spyOn(client, 'currencies');
         mockOne.mockReturnValue({
             "data": {
@@ -67,7 +66,7 @@ describe('test for data validation', () => {
         mockOne.mockRestore();
         mockTwo.mockRestore();
     })
-    // describe('test validateInput function', () => {
+    describe('test validateInput function', () => {
         test('should return array with currencies if all passed currencies are valid',async () => {
         let result = await validateInput('AED, AFN');
         expect(result).toEqual(['AED', 'AFN']);
@@ -75,8 +74,8 @@ describe('test for data validation', () => {
         test('should throw an error if we pass invalid currency', async() => {
         await expect(validateInput('TEST, AED')).rejects.toThrow('Currency type TEST do not exist')
         })
-    // });
-    // describe('test validateTime functionality', () => {
+    });
+    describe('test validateTime functionality', () => {
         test('should return original array if all the dates are in the past', () => {
         const result = validateTime(['2024-01-01', '2024-02-01']);
         expect(result).toEqual(['2024-01-01', '2024-02-01']);
@@ -84,6 +83,6 @@ describe('test for data validation', () => {
         test('should throw an error if array contains dates in the future', () => {
         expect(() => validateTime(['2025-01-01', '2023-01-01'])).toThrow('Please select dates in the past.');
         })
-    // })
+    })
 })
 
