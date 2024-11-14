@@ -2,15 +2,14 @@
   "name": "rates",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "webpack --watch",
     "sass": "sass --watch ./sass/style.scss:./src/style.css"
   },
   "jest": {
-    "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest"
-    }
+    "transform": {}
   },
   "keywords": [],
   "author": "",

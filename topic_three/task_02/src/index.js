@@ -12,6 +12,7 @@ async function getPokemons(offset) {
                 name
                 image
                 url
+                id
                 }
                 next,
                 previous
@@ -43,7 +44,6 @@ async function getEvolutionChain(pokemonUrl) {
 
     const evolutionResponse = await fetch(evolutionChainUrl);
     const evolutionData = await evolutionResponse.json();
-    console.log(evolutionData)
 
     const evolutions = [];
     let current = evolutionData.chain;
@@ -71,7 +71,6 @@ function loadEvolutionNames( evolutionNames, pokemonName) {
     infoTextEl.innerHTML = 'Evolutions'
     evolutionNamesEl.appendChild(infoTextEl);
     for(let i = 1; i < evolutionNames.length; i++) {
-        console.log(pokemonName, evolutionNames[i]);
         const evolutionName = document.createElement('p')
         evolutionName.innerHTML = evolutionNames[i];
         evolutionNamesEl.appendChild(evolutionName);
@@ -86,15 +85,19 @@ async function loadData(page) {
     currPage = page;
     let offset = page * limit;
     const pokemons = await getPokemons(offset);
-    console.log(pokemons)
     pokemonData = pokemons.results;
 
     const pokemonContainerElement = document.querySelector('.pokemons-container');
     pokemonContainerElement.innerHTML = '';
 
-    pokemons.results.forEach(async pokemon => {
-        console.log(pokemon.url)
-        const evolution_names = await getEvolutionChain(pokemon.url);
+    const evoluationNamesPromisify = pokemons.results.map(async p => {
+        return await getEvolutionChain(p.url)
+    });
+    const evolutionNamesResult = await Promise.all(evoluationNamesPromisify);
+
+    for(const [key, value] of Object.entries(pokemons.results)) {
+        const pokemon = value
+        const evolutionNames = evolutionNamesResult[key]
 
         const currPokemonContainerElement = document.createElement('div');
         currPokemonContainerElement.classList.add('single-pokemon-container');
@@ -108,7 +111,7 @@ async function loadData(page) {
         
         currPokemonContainerElement.appendChild(pokemonImgElement);
         currPokemonContainerElement.appendChild(pokemenNameElement);
-        const evoluationNamesEl = loadEvolutionNames(evolution_names, pokemon.name)
+        const evoluationNamesEl = loadEvolutionNames(evolutionNames, pokemon.name)
         if (evoluationNamesEl) {
             currPokemonContainerElement.appendChild(evoluationNamesEl)
         } 
@@ -116,12 +119,9 @@ async function loadData(page) {
         pokemonContainerElement.appendChild(currPokemonContainerElement);
 
         currPokemonContainerElement.addEventListener('click', () => {
-            console.log(`pokemon ${pokemon.name} clicked`)
             location.href = '../dist/details.html?name=' + pokemon.name;
         })
-    });
-    
-
+    }
 }
 
 
@@ -138,8 +138,5 @@ prevBtnEl.addEventListener('click', () => {
     loadData(currPage);
 })
 
-
-console.log(prevBtnEl);
-console.log(nextBtn);
-
 window.onload = () => loadData(0);
+

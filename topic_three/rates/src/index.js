@@ -1,7 +1,9 @@
 import VanillaCalendar from 'vanilla-calendar-pro';
 import 'vanilla-calendar-pro/build/vanilla-calendar.min.css';
-import currencyapi from '@everapi/currencyapi-js';
+
 import './style.css';
+import {validateInput, validateTime} from './utils.js'
+import { client } from './api_client.js';
 
 const calendarEl = document.querySelector('.calendar');
 const formEl = document.querySelector('.currency-container');
@@ -44,28 +46,6 @@ function setSuccess(element) {
     errorDisplay.innerHTML = '';
 }
 
-export function validateInput(inp) {
-    return inp.split(',').map(curr => {
-        if(!allCurrencies.includes(curr.trim())) {
-            throw new Error(`Currency type ${curr} do not exist`);
-        } else {
-            return curr.trim();
-        }
-    });
-}
-
-export function validateTime(timesArr) {
-    const timeNow = new Date().getTime();
-
-    timesArr.forEach(t => {
-        const currTime = new Date(t).getTime();
-        if(currTime > timeNow) {
-            throw new Error('Please select dates in the past.')
-        }
-    });
-    return timesArr
-}
-
 function createTableHeader(desiredCurrArr) {
     let headerRow = document.createElement('tr');
     let dateCell = document.createElement('td');
@@ -95,8 +75,8 @@ function createRow(date, currenciesData) {
     return tableRow;
 }
 
-let client = new currencyapi(process.env.API_TOKEN)
 let allCurrencies = await client.currencies();
+console.log(allCurrencies)
 allCurrencies = Object.keys(allCurrencies.data);
 
 
@@ -148,7 +128,6 @@ formEl.addEventListener('submit', (e) => {
         })
     })
 });
-
 
 showCalendar();
 
