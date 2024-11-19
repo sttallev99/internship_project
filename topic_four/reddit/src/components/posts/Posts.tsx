@@ -4,27 +4,47 @@ import { RootState } from 'store'
 import SinglePost from '../post/Post';
 import './style.css';
 import Pagination from 'components/pagination/Pagination';
+import SortMenu from 'components/sortMenu/SortMenu';
+import { Post } from 'reducers/postsSlice';
 
+function filterData(posts:Post[], option: string): Post[] {
+  const currTime = new Date().getTime();
+  switch(option) {
+    case 'all': 
+      return posts
+    case 'today':
+      return posts.filter(p => currTime - p.post_date <= 86400000)
+    case 'this week':
+      return posts.filter(p => currTime - p.post_date <= 604800000)
+    case 'this month':
+      return posts.filter(p => currTime - p.post_date <= 2629743000)
+    default:
+      return posts
+  }
+}
 
 const Posts = () => {
   const [imgUrl, setImgUrl] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const posts = useSelector((state: RootState) => state.posts.posts);
+  const [lastPage, setLastPage] = useState(0)
+  const [filterOption, setFilterOption] = useState('');
+  const [currentPosts, setCurrentPosts] = useState<Post[]>([])
+
+  let posts = useSelector((state: RootState) => state.posts.posts);
+
   const postPerPage = 5;
-  const lastPage = Math.ceil(posts.length / postPerPage);
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
-  let currentPosts = posts.slice(firstPostIndex, lastPostIndex);
+  
   useEffect(() => {
-      currentPosts = posts.slice(firstPostIndex, lastPostIndex);
-      console.log(posts)
-      console.log(currentPosts)
-  }, [posts])
-
-  console.log(posts.length)
+      const data = filterData(posts, filterOption);
+      setLastPage(Math.ceil(data.length / postPerPage));
+      setCurrentPosts(data.slice(firstPostIndex, lastPostIndex))
+  }, [posts, filterOption]);
 
   return (
     <>
+    <SortMenu filterOption={filterOption} setFilterOption={setFilterOption}/>
     <div className='posts_container'>
       {currentPosts.map(post => <SinglePost post={post} setImgUrl={setImgUrl}/>)}
     </div>
