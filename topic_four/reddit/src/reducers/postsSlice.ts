@@ -27,7 +27,7 @@ const initialState: Posts = {
                 username: "u/test",
                 user_image: "https://styles.redditmedia.com/t5_948sqb/styles/profileIcon_5rv5fal4shib1.jpeg?width=256&height=256&frame=1&auto=webp&crop=256:256,smart&s=0deb86294f6a2a71c856bde693e9881efab12380"
             },
-            post_date: 1731760782001,
+            post_date: 1732179002897,
             post_image: 'https://external-preview.redd.it/96QLllPueIqVo9Y9fTetsCdtbJm9xgWnjuIppVqh24g.jpg?width=1080&crop=smart&auto=webp&s=8de8e8cf9c4991840dd0d635ac348a3e5a1be73e',
             likes: 20,
             comments: ['fist comment', 'second comment']

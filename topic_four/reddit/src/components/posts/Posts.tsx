@@ -32,15 +32,15 @@ const Posts = () => {
 
   let posts = useSelector((state: RootState) => state.posts.posts);
 
+  
   const postPerPage = 5;
   const lastPostIndex = currentPage * postPerPage;
   const firstPostIndex = lastPostIndex - postPerPage;
-  
   useEffect(() => {
       const data = filterData(posts, filterOption);
       setLastPage(Math.ceil(data.length / postPerPage));
       setCurrentPosts(data.slice(firstPostIndex, lastPostIndex))
-  }, [posts, filterOption]);
+  }, [posts, filterOption, currentPage]);
 
   return (
     <>
