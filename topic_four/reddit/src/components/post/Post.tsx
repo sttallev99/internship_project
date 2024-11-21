@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ReactTimeAgo from "react-time-ago";
 import classNames from "classnames";
 import { useDispatch } from "react-redux";
 import { BsThreeDots } from "react-icons/bs";
@@ -15,6 +14,7 @@ import { CiFlag1 } from "react-icons/ci";
 import { addLike, addDislike, removePost } from "reducers/postsSlice";
 import { Post } from 'reducers/postsSlice';
 import './style.css'
+import timeAgo from '../../utils/getFormatedDate';
 
 interface Props {
     post: Post,
@@ -48,11 +48,11 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                         <span>{post.user.username}</span>
                         <span>.</span>
                         <span className='post-container__info-container__left-side-container__post-date'>
-                            <ReactTimeAgo date={post.post_date} locale="en-US" />
+                            <span>{timeAgo(post.post_date)}</span>
                         </span>
                     </div>
                     <div className='post-container__info-container__right-side-container'>
-                        <span onClick={() => setIsMenuOpen(!isMenuOpen)}><BsThreeDots/></span>
+                        <span onClick={() => setIsMenuOpen(!isMenuOpen)} data-testId='postMenu'><BsThreeDots/></span>
                     </div>
                 </div>
                 <p className='post-container__title'>{post.title}</p>
@@ -61,34 +61,34 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                 (<p>{post.post_text}</p>)}
                 <div className='post-container__interact-container'>
                     <div className='post-container__interact-container__single-container like_container'>
-                        <PiArrowFatUp onClick={() => dispatch(addLike(post.id))}/>
-                        <span>{post.likes}</span>
-                        <PiArrowFatDown onClick={() => dispatch(addDislike(post.id))}/>
+                        <span  data-testId='likeBtn'><PiArrowFatUp onClick={() => dispatch(addLike(post.id))}/></span>
+                        <span data-testId='likesCount'>{post.likes}</span>
+                        <span data-testId='dislikeBtn'><PiArrowFatDown onClick={() => dispatch(addDislike(post.id))}/></span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
-                        <FaRegComment />
-                        <span>{post.comments.length}</span>
+                        <span data-testId="commentBtn"><FaRegComment/></span>
+                        <span data-testId='commentCount'>{post.comments.length}</span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
-                        <SlBadge />
+                        <span data-testId="badgeBtn"><SlBadge/></span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
-                        <PiShareFatBold />
-                        <span>Share</span>
+                        <span data-testId="shareBtn"><PiShareFatBold/></span>
+                        <span role="paragraph">Share</span>
                     </div>
                 </div>
-                <div className={postMenuClass}>
-                    <div className="post-menu__menu-item">
+                <div className={postMenuClass} data-testId='post-options'>
+                    <div className="post-menu__menu-item" data-testId='single-option'>
                         <CiBookmark />
-                        <span>Save</span>
+                        <span role="paragraph">Save</span>
                     </div>
-                    <div className="post-menu__menu-item">
+                    <div className="post-menu__menu-item" data-testId='single-option'>
                         <BiHide />
-                        <span onClick={handleRemovePostClick}>Hide</span>
+                        <span role="paragraph" onClick={handleRemovePostClick}>Hide</span>
                     </div>
-                    <div className="post-menu__menu-item">
+                    <div className="post-menu__menu-item" data-testId='single-option'>
                         <CiFlag1 />
-                        <span>Report</span>
+                        <span role="paragraph">Report</span>
                     </div>
                 </div>
             </div>
