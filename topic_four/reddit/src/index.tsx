@@ -12,11 +12,11 @@ const root = ReactDOM.createRoot(
 );
 const queryClient = new QueryClient();
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
-      </PersistGate>
-    </Provider>
-  </QueryClientProvider>
+      </QueryClientProvider>
+    </PersistGate>
+  </Provider>
 );

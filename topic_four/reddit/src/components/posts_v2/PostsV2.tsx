@@ -39,28 +39,30 @@ const PostsV2 = () => {
 
   const LIMIT = 5;
 
-  function fetchItems({ pageParam }: {pageParam: number}): Promise<{
-      data: Post[],
-      currentPage: number,
-      nextPage: number | null,
+  function fetchItems({ pageParam }: { pageParam: number }): Promise<{
+    data: Post[];
+    currentPage: number;
+    nextPage: number | null;
   }> {
-      return new Promise((resolve) => {
-          setTimeout(() => {
-              resolve({
-                  data: posts.slice(pageParam, pageParam + LIMIT),
-                  currentPage: pageParam,
-                  nextPage: pageParam + LIMIT < posts.length ? pageParam + LIMIT : null
-              });
-          }, 1000);
-      })
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve({
+          data: posts.slice(pageParam, pageParam + LIMIT),
+          currentPage: pageParam,
+          nextPage: pageParam + LIMIT < posts.length ? pageParam + LIMIT : null,
+        });
+      }, 1000);
+    });
   }
 
-  const { data, status, error, fetchNextPage} = useInfiniteQuery({
-    queryKey: ['items'],
-    queryFn: fetchItems,
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => lastPage.nextPage
-  });
+  const { data, error, status, fetchNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ['items'],
+      queryFn: fetchItems,
+      initialPageParam: 0,
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+    });
+
 
   const { ref, inView } = useInView();
   
@@ -83,14 +85,14 @@ const PostsV2 = () => {
         <div>{error.message}</div>
       ) : (
         <div>
-          {data.pages.map((page) => {
-            console.log(page)
-            return <div key={page.currentPage}>
-              {page.data.map((post) => {
-                return <SinglePost post={post} setImgUrl={setImgUrl} />
-              })}
+          {data.pages.map((page) => (
+            <div key={page.currentPage}>
+              {page.data.map((post) => (
+                <SinglePost post={post} setImgUrl={setImgUrl} key={post.id}/>
+              ))}
             </div>
-          })}
+          ))}
+          <div ref={ref}>{isFetchingNextPage && 'Loading...'}</div>
         </div>
       )}
     </div>
@@ -98,7 +100,6 @@ const PostsV2 = () => {
       <span className='close' onClick={() => setImgUrl('')}>&times;</span>
       <img src={imgUrl} alt="" />
     </div>
-    <div ref={ref}></div>
     </>
   )
 }
