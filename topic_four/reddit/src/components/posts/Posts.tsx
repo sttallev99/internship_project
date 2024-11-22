@@ -6,6 +6,7 @@ import './style.css';
 import Pagination from 'components/pagination/Pagination';
 import SortMenu from 'components/sortMenu/SortMenu';
 import { Post } from 'reducers/postsSlice';
+import { Link } from 'react-router-dom';
 
 function filterData(posts:Post[], option: string): Post[] {
   const currTime = new Date().getTime();
@@ -44,7 +45,10 @@ const Posts = () => {
 
   return (
     <>
-    <SortMenu filterOption={filterOption} setFilterOption={setFilterOption}/>
+    <div className='posts-header'>
+      <SortMenu filterOption={filterOption} setFilterOption={setFilterOption}/>
+      <Link to="/posts-v2" className='link'>Go to posts page with infinite scroll</Link>
+    </div>
     <div className='posts_container'>
       {currentPosts.map(post => <SinglePost post={post} setImgUrl={setImgUrl}/>)}
     </div>

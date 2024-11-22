@@ -1,12 +1,15 @@
 import React, {ReactElement} from 'react'
 import {render, RenderOptions} from '@testing-library/react'
 import { Provider } from 'react-redux'
-import { store } from 'store'
+import { store, persistor } from 'store'
+import { PersistGate } from 'redux-persist/integration/react'
 
 const AllTheProviders = ({children}: {children: React.ReactNode}) => {
   return (
     <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
         {children}
+      </PersistGate>
     </Provider>
   )
 }

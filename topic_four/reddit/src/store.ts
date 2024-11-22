@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import PostsReducer from './reducers/postsSlice';
 import localStorage from "redux-persist/lib/storage";
 import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist";
-import persistStore from "redux-persist/es/persistStore";
+import {persistStore} from "redux-persist";
 
 const postsPersistConfig = {
     key: "posts",
