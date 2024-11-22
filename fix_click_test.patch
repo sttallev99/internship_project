@@ -1,0 +1,127 @@
+﻿diff --git a/topic_four/reddit/src/components/post/Post.tsx b/topic_four/reddit/src/components/post/Post.tsx
+index 7a8b0c7..301c6ed 100644
+--- a/topic_four/reddit/src/components/post/Post.tsx
++++ b/topic_four/reddit/src/components/post/Post.tsx
+@@ -52,7 +52,7 @@ const SinglePost = ({post, setImgUrl}: Props) => {
+                         </span>
+                     </div>
+                     <div className='post-container__info-container__right-side-container'>
+-                        <span onClick={() => setIsMenuOpen(!isMenuOpen)} data-testId='postMenu'><BsThreeDots/></span>
++                        <span onClick={() => setIsMenuOpen(!isMenuOpen)} data-testid='postMenu'><BsThreeDots/></span>
+                     </div>
+                 </div>
+                 <p className='post-container__title'>{post.title}</p>
+@@ -61,32 +61,32 @@ const SinglePost = ({post, setImgUrl}: Props) => {
+                 (<p>{post.post_text}</p>)}
+                 <div className='post-container__interact-container'>
+                     <div className='post-container__interact-container__single-container like_container'>
+-                        <span  data-testId='likeBtn'><PiArrowFatUp onClick={() => dispatch(addLike(post.id))}/></span>
+-                        <span data-testId='likesCount'>{post.likes}</span>
+-                        <span data-testId='dislikeBtn'><PiArrowFatDown onClick={() => dispatch(addDislike(post.id))}/></span>
++                        <span  data-testid='likeBtn' onClick={() => dispatch(addLike(post.id))}><PiArrowFatUp /></span>
++                        <span data-testid='likesCount'>{post.likes}</span>
++                        <span data-testid='dislikeBtn'><PiArrowFatDown onClick={() => dispatch(addDislike(post.id))}/></span>
+                     </div>
+                     <div className='post-container__interact-container__single-container'>
+-                        <span data-testId="commentBtn"><FaRegComment/></span>
+-                        <span data-testId='commentCount'>{post.comments.length}</span>
++                        <span data-testid="commentBtn"><FaRegComment/></span>
++                        <span data-testid='commentCount'>{post.comments.length}</span>
+                     </div>
+                     <div className='post-container__interact-container__single-container'>
+-                        <span data-testId="badgeBtn"><SlBadge/></span>
++                        <span data-testid="badgeBtn"><SlBadge/></span>
+                     </div>
+                     <div className='post-container__interact-container__single-container'>
+-                        <span data-testId="shareBtn"><PiShareFatBold/></span>
++                        <span data-testid="shareBtn"><PiShareFatBold/></span>
+                         <span role="paragraph">Share</span>
+                     </div>
+                 </div>
+-                <div className={postMenuClass} data-testId='post-options'>
+-                    <div className="post-menu__menu-item" data-testId='single-option'>
++                <div className={postMenuClass} data-testid='post-options'>
++                    <div className="post-menu__menu-item" data-testid='single-option'>
+                         <CiBookmark />
+                         <span role="paragraph">Save</span>
+                     </div>
+-                    <div className="post-menu__menu-item" data-testId='single-option'>
++                    <div className="post-menu__menu-item" data-testid='single-option'>
+                         <BiHide />
+                         <span role="paragraph" onClick={handleRemovePostClick}>Hide</span>
+                     </div>
+-                    <div className="post-menu__menu-item" data-testId='single-option'>
++                    <div className="post-menu__menu-item" data-testid='single-option'>
+                         <CiFlag1 />
+                         <span role="paragraph">Report</span>
+                     </div>
+diff --git a/topic_four/reddit/src/components/post/post.test.tsx b/topic_four/reddit/src/components/post/post.test.tsx
+index 4fc4aea..0c6d596 100644
+--- a/topic_four/reddit/src/components/post/post.test.tsx
++++ b/topic_four/reddit/src/components/post/post.test.tsx
+@@ -8,27 +8,15 @@ import { addLike, addDislike, removePost } from "reducers/postsSlice";
+ // import { useDispatch } from "react-redux";
+ import * as ReactRedux from 'react-redux';
+ 
++const mockDispatch = jest.fn();
++
++jest.mock('react-redux', () => ({
++    ...jest.requireActual('react-redux'),
++    useDispatch: () => mockDispatch,
++}));
++
+ describe('Post component', () => {
+     const setImgUrlMock = jest.fn();
+-    const mockuseDispatch = jest.fn();
+-    
+-    // const useDispatch = () => mockuseDispatch;
+-    // const mockDispatch = jest.fn();
+-    // jest.mock('react-redux', () => ({
+-    //     ...jest.requireActual('react-redux'),
+-    //     useDispatch: () => mockuseDispatch
+-    //   }));
+-       
+-    const useDispatchMock = jest.spyOn(ReactRedux, 'useDispatch');
+-    const dispatchMock = jest.fn()
+-    useDispatchMock.mockReturnValue(dispatchMock)
+- 
+-      
+-    
+-    // jest.mock('reducers/postsSlice', () => ({
+-    //     addLike: jest.fn(),
+-    //     addDislike: jest.fn(),
+-    // }));
+ 
+     const post = {
+         id: 1,
+@@ -98,14 +86,15 @@ describe('Post component', () => {
+         expect(postOptions.classList).not.toContain('isOpen');
+     });
+ 
+-    test.only('Increment like counter when click like button', () => {
++    test('Increment like counter when click like button', () => {
+         const likeBtn = screen.getByTestId('likeBtn');
+         const likesCount = screen.getByTestId('likesCount');
+ 
+         fireEvent.click(likeBtn);
+         // console.log(likesCount.textContent = (post.likes + 1).toString())
+         // expect(likesCount).toHaveTextContent('21')
+-        expect(dispatchMock).toHaveBeenCalledTimes(1);
++        expect(mockDispatch).toHaveBeenCalledTimes(1);
++        expect(mockDispatch).toHaveBeenCalledWith(addLike(post.id));
+     })
+ })
+ 
+diff --git a/topic_four/reddit/src/store.ts b/topic_four/reddit/src/store.ts
+index 6350fe3..8261f56 100644
+--- a/topic_four/reddit/src/store.ts
++++ b/topic_four/reddit/src/store.ts
+@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
+ import PostsReducer from './reducers/postsSlice';
+ import localStorage from "redux-persist/lib/storage";
+ import { FLUSH, PAUSE, PERSIST, persistReducer, PURGE, REGISTER, REHYDRATE } from "redux-persist";
+-import persistStore from "redux-persist/es/persistStore";
++import { persistStore } from "redux-persist";
+ 
+ const postsPersistConfig = {
+     key: "posts",
