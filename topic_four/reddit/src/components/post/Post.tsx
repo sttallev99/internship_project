@@ -52,7 +52,7 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                         </span>
                     </div>
                     <div className='post-container__info-container__right-side-container'>
-                        <span onClick={() => setIsMenuOpen(!isMenuOpen)} data-testId='postMenu'><BsThreeDots/></span>
+                        <span onClick={() => setIsMenuOpen(!isMenuOpen)} data-testid='postMenu'><BsThreeDots/></span>
                     </div>
                 </div>
                 <p className='post-container__title'>{post.title}</p>
@@ -61,32 +61,32 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                 (<p>{post.post_text}</p>)}
                 <div className='post-container__interact-container'>
                     <div className='post-container__interact-container__single-container like_container'>
-                        <span  data-testId='likeBtn'><PiArrowFatUp onClick={() => dispatch(addLike(post.id))}/></span>
-                        <span data-testId='likesCount'>{post.likes}</span>
-                        <span data-testId='dislikeBtn'><PiArrowFatDown onClick={() => dispatch(addDislike(post.id))}/></span>
+                        <span  data-testid='likeBtn' onClick={() => dispatch(addLike(post.id))}><PiArrowFatUp /></span>
+                        <span data-testid='likesCount'>{post.likes}</span>
+                        <span data-testid='dislikeBtn'><PiArrowFatDown onClick={() => dispatch(addDislike(post.id))}/></span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
-                        <span data-testId="commentBtn"><FaRegComment/></span>
-                        <span data-testId='commentCount'>{post.comments.length}</span>
+                        <span data-testid="commentBtn"><FaRegComment/></span>
+                        <span data-testid='commentCount'>{post.comments.length}</span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
-                        <span data-testId="badgeBtn"><SlBadge/></span>
+                        <span data-testid="badgeBtn"><SlBadge/></span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
-                        <span data-testId="shareBtn"><PiShareFatBold/></span>
+                        <span data-testid="shareBtn"><PiShareFatBold/></span>
                         <span role="paragraph">Share</span>
                     </div>
                 </div>
-                <div className={postMenuClass} data-testId='post-options'>
-                    <div className="post-menu__menu-item" data-testId='single-option'>
+                <div className={postMenuClass} data-testid='post-options'>
+                    <div className="post-menu__menu-item" data-testid='single-option'>
                         <CiBookmark />
                         <span role="paragraph">Save</span>
                     </div>
-                    <div className="post-menu__menu-item" data-testId='single-option'>
+                    <div className="post-menu__menu-item" data-testid='single-option'>
                         <BiHide />
                         <span role="paragraph" onClick={handleRemovePostClick}>Hide</span>
                     </div>
-                    <div className="post-menu__menu-item" data-testId='single-option'>
+                    <div className="post-menu__menu-item" data-testid='single-option'>
                         <CiFlag1 />
                         <span role="paragraph">Report</span>
                     </div>
