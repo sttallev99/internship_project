@@ -3,7 +3,6 @@ import '@testing-library/jest-dom';
 import SinglePost from "./Post";
 import timeago from '../../utils/getFormatedDate';
 import { addLike, addDislike, removePost } from "reducers/postsSlice";
-import PostsV2 from "components/posts_v2/PostsV2";
 
 const mockedDispatch = jest.fn();
 
