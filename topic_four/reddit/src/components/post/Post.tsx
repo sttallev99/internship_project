@@ -40,7 +40,7 @@ const SinglePost = ({post, setImgUrl}: Props) => {
 
     return (
         <div>
-            <div className={hidePostClass}>
+            <div className={hidePostClass} data-testid='post-container'>
             <hr className="post-separator"/>
                 <div className='post-container__info-container'>
                     <div className='post-container__info-container__left-side-container'>
@@ -58,12 +58,12 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                 <p className='post-container__title'>{post.title}</p>
                 {post.post_image ? 
                 (<img src={post.post_image} alt="post_image"  className="post_container__img" onClick={() => setImgUrl(post.post_image || '')}/>) :
-                (<p>{post.post_text}</p>)}
+                (<p data-testid='post-description'>{post.post_text}</p>)}
                 <div className='post-container__interact-container'>
                     <div className='post-container__interact-container__single-container like_container'>
                         <span  data-testid='likeBtn' onClick={() => dispatch(addLike(post.id))}><PiArrowFatUp /></span>
                         <span data-testid='likesCount'>{post.likes}</span>
-                        <span data-testid='dislikeBtn'><PiArrowFatDown onClick={() => dispatch(addDislike(post.id))}/></span>
+                        <span data-testid='dislikeBtn' onClick={() => dispatch(addDislike(post.id))}><PiArrowFatDown/></span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
                         <span data-testid="commentBtn"><FaRegComment/></span>
@@ -84,7 +84,7 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                     </div>
                     <div className="post-menu__menu-item" data-testid='single-option'>
                         <BiHide />
-                        <span role="paragraph" onClick={handleRemovePostClick}>Hide</span>
+                        <span role="paragraph"  data-testid='hide-btn' onClick={handleRemovePostClick}>Hide</span>
                     </div>
                     <div className="post-menu__menu-item" data-testid='single-option'>
                         <CiFlag1 />

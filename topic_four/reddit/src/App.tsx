@@ -1,4 +1,3 @@
-import Posts from "components/posts/Posts";
 import { Outlet } from "react-router";
 
 function App() {

@@ -4,7 +4,6 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { RootState } from 'store'
 import SinglePost from '../post/Post';
 import './style.css';
-import Pagination from 'components/pagination/Pagination';
 import SortMenu from 'components/sortMenu/SortMenu';
 import { Post } from 'reducers/postsSlice';
 import { Link } from 'react-router-dom';
@@ -25,11 +24,6 @@ function filterData(posts:Post[], option: string): Post[] {
     default:
       return posts
   }
-}
-
-async function fetchPosts(page: number, posts: Post[]) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return posts.slice((page - 1) * 3, page * 3);
 }
 
 const PostsV2 = () => {
@@ -67,6 +61,7 @@ const PostsV2 = () => {
   const { ref, inView } = useInView();
   
   useEffect(() => {
+    console.log(inView)
     if(inView) {
       fetchNextPage();
     }
@@ -88,7 +83,8 @@ const PostsV2 = () => {
           {data.pages.map((page) => (
             <div key={page.currentPage}>
               {page.data.map((post) => (
-                <SinglePost post={post} setImgUrl={setImgUrl} key={post.id}/>
+                  // <SinglePost post={post} setImgUrl={setImgUrl} key={post.id}/>
+                <div style={{height: '400px', backgroundColor: 'white', marginBottom: '30px', color: 'black'}}>{post.id}</div>
               ))}
             </div>
           ))}
