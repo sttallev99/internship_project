@@ -15,28 +15,28 @@ const SortMenu = ({filterOption, setFilterOption}:Props) => {
         <>
         <div className='sort-menu-container'>
             <div className='sort-option-container'>
-                <div className='dropdown-header' onClick={() => setIsOpen(!isOpen)}>
+                <div className='dropdown-header' onClick={() => setIsOpen(!isOpen)} data-testid='dropdown-header'>
                 <span>{filterOption === '' ? 'All' : filterOption}</span>
                 <MdOutlineKeyboardArrowDown />
                 </div>
-                <div className={dropDownListClasses}>
+                <div className={dropDownListClasses} data-testid='dropdown-container'>
                     <ul className='dropdown-list'>
                         <li className='list-item' onClick={() => {
                             setFilterOption('all');
                             setIsOpen(!isOpen)
-                        }}>All</li>
+                        }} data-testid="posts-sort-option">All</li>
                         <li className='list-item' onClick={() => {
                             setFilterOption('today');
                             setIsOpen(!isOpen)
-                        }}>Today</li>
+                        }} data-testid="posts-sort-option">Today</li>
                         <li className='list-item' onClick={() => {
                             setFilterOption('this week')
                             setIsOpen(!isOpen)
-                        }}>This week</li>
+                        }} data-testid="posts-sort-option">This week</li>
                         <li className='list-item' onClick={() => {
                             setFilterOption('this month');
                             setIsOpen(!isOpen)
-                        }}>This Month</li>
+                        }} data-testid="posts-sort-option">This Month</li>
                     </ul>
                 </div>
             </div>
