@@ -15,28 +15,77 @@ import { addLike, addDislike, removePost } from "reducers/postsSlice";
 import { Post } from 'reducers/postsSlice';
 import './style.css'
 import timeAgo from '../../utils/getFormatedDate';
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
     post: Post,
     setImgUrl: React.Dispatch<React.SetStateAction<string>>,
+    filterOption: string
 }
 
 
-const SinglePost = ({post, setImgUrl}: Props) => {
+const SinglePost = ({post, setImgUrl, filterOption}: Props) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [hidePost, setHidePost] = useState(false);
 
     const postMenuClass = classNames('post-menu', {"isOpen": isMenuOpen});
-    const hidePostClass = classNames('post-container', {"hide-post": hidePost})
+    const hidePostClass = classNames('post-container', {"hide-post": hidePost});
+    const queryClient = useQueryClient();
     const dispatch = useDispatch();
 
-    const handleRemovePostClick = () => {
+    const handleLike = () => {
+        dispatch(addLike(post.id));
+        
+        queryClient.setQueryData(['items', filterOption], (oldData:any) => {
+            if (!oldData) return oldData;
+
+            const updatedPages = oldData.pages.map((page:any) => ({
+                ...page,
+                data: page.data.map((p:any) =>
+                    p.id === post.id ? { ...p, likes: p.likes + 1 } : p
+                ),
+            }));
+            console.log({ ...oldData, pages: updatedPages })
+            return { ...oldData, pages: updatedPages };
+        });
+    };
+
+    const handeDislike = () => {
+        dispatch(addDislike(post.id));
+        
+        queryClient.setQueryData(['items', filterOption], (oldData:any) => {
+            if (!oldData) return oldData;
+
+            const updatedPages = oldData.pages.map((page:any) => ({
+                ...page,
+                data: page.data.map((p:any) =>
+                    p.id === post.id ? { ...p, likes: p.likes - 1 } : p
+                ),
+            }));
+    
+            return { ...oldData, pages: updatedPages };
+        });
+    };
+    
+    const handleRemove = () => {
+
         setHidePost(!hidePost);
         setTimeout(() => {
             dispatch(removePost(post.id));
-            setHidePost(false)
-        },300)
-    }
+            queryClient.setQueryData(['items', filterOption], (oldData:any) => {
+              if (!oldData) return oldData;
+        
+              const updatedPages = oldData.pages.map((page:any) => ({
+                ...page,
+                data: page.data.filter((p:any) => p.id !== post.id),
+              }));
+        
+              return { ...oldData, pages: updatedPages };
+            });
+            setHidePost(false);
+        }, 300);
+    
+      };
 
     return (
         <div>
@@ -61,9 +110,9 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                 (<p data-testid='post-description'>{post.post_text}</p>)}
                 <div className='post-container__interact-container'>
                     <div className='post-container__interact-container__single-container like_container'>
-                        <span  data-testid='likeBtn' onClick={() => dispatch(addLike(post.id))}><PiArrowFatUp /></span>
+                        <span  data-testid='likeBtn' onClick={handleLike}><PiArrowFatUp /></span>
                         <span data-testid='likesCount'>{post.likes}</span>
-                        <span data-testid='dislikeBtn' onClick={() => dispatch(addDislike(post.id))}><PiArrowFatDown/></span>
+                        <span data-testid='dislikeBtn' onClick={handeDislike}><PiArrowFatDown/></span>
                     </div>
                     <div className='post-container__interact-container__single-container'>
                         <span data-testid="commentBtn"><FaRegComment/></span>
@@ -84,7 +133,7 @@ const SinglePost = ({post, setImgUrl}: Props) => {
                     </div>
                     <div className="post-menu__menu-item" data-testid='single-option'>
                         <BiHide />
-                        <span role="paragraph"  data-testid='hide-btn' onClick={handleRemovePostClick}>Hide</span>
+                        <span role="paragraph"  data-testid='hide-btn' onClick={handleRemove}>Hide</span>
                     </div>
                     <div className="post-menu__menu-item" data-testid='single-option'>
                         <CiFlag1 />

@@ -41,27 +41,25 @@ const PostsV2 = () => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
-          data: posts.slice(pageParam, pageParam + LIMIT),
+          data: filterData(posts, filterOption).slice(pageParam, pageParam + LIMIT),
           currentPage: pageParam,
           nextPage: pageParam + LIMIT < posts.length ? pageParam + LIMIT : null,
         });
       }, 1000);
     });
   }
-
+  
   const { data, error, status, fetchNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['items'],
+      queryKey: ['items', filterOption],
       queryFn: fetchItems,
       initialPageParam: 0,
       getNextPageParam: (lastPage) => lastPage.nextPage,
     });
 
-
   const { ref, inView } = useInView();
   
   useEffect(() => {
-    console.log(inView)
     if(inView) {
       fetchNextPage();
     }
@@ -83,12 +81,15 @@ const PostsV2 = () => {
           {data.pages.map((page) => (
             <div key={page.currentPage}>
               {page.data.map((post) => (
-                  // <SinglePost post={post} setImgUrl={setImgUrl} key={post.id}/>
-                <div style={{height: '400px', backgroundColor: 'white', marginBottom: '30px', color: 'black'}}>{post.id}</div>
+                  <SinglePost post={post} setImgUrl={setImgUrl} filterOption={filterOption} key={post.id}/>
+                // <div style={{height: '400px', backgroundColor: 'white', marginBottom: '30px', color: 'black'}}>{post.id}</div>
               ))}
             </div>
           ))}
-          <div ref={ref}>{isFetchingNextPage && 'Loading...'}</div>
+          <div ref={ref}>
+            <hr style={{visibility: 'hidden'}}/>
+            {isFetchingNextPage && 'Loading...'}
+            </div>
         </div>
       )}
     </div>

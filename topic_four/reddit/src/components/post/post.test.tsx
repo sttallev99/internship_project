@@ -4,6 +4,7 @@ import SinglePost from "./Post";
 import timeago from '../../utils/getFormatedDate';
 import { addLike, addDislike, removePost } from "reducers/postsSlice";
 
+
 const mockedDispatch = jest.fn();
 
 jest.mock('react-redux', () => ({
@@ -39,7 +40,7 @@ describe('Post component', () => {
     }    
 
     beforeEach(() => {
-        render(<SinglePost post={mockPost} setImgUrl={setImgUrlMock}/>);
+        render(<SinglePost post={mockPost} setImgUrl={setImgUrlMock} filterOption=""/>);
         jest.clearAllMocks();
 
     });
@@ -78,7 +79,7 @@ describe('Post component', () => {
     });
 
     test('it should show post description if post object didnt contain "post-image" property', () => {
-        render(<SinglePost post={mockPostV2} setImgUrl={setImgUrlMock}/>);
+        render(<SinglePost post={mockPostV2} setImgUrl={setImgUrlMock} filterOption=""/>);
         const postText = screen.queryByTestId('post-description');
         expect(postText).toBeInTheDocument();
 

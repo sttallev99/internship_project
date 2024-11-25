@@ -50,7 +50,7 @@ const Posts = () => {
       <Link to="/posts-v2" className='link'>Go to posts page with infinite scroll</Link>
     </div>
     <div className='posts_container'>
-      {currentPosts.map(post => <SinglePost post={post} setImgUrl={setImgUrl}/>)}
+      {currentPosts.map(post => <SinglePost post={post} filterOption={filterOption} setImgUrl={setImgUrl}/>)}
     </div>
     <Pagination 
       currentPage={currentPage} 
