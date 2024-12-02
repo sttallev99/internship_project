@@ -25,7 +25,7 @@ const searchingForSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-});
+}, { timestamps: true });
 
 const SearchingFor = mongoose.model("SearchingFor", searchingForSchema);
 

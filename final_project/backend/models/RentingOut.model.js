@@ -25,7 +25,7 @@ const rentingOutSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-});
+}, { timestamps: true });
 
 const RentingOut = mongoose.model("RentingOut", rentingOutSchema);
 export default RentingOut
