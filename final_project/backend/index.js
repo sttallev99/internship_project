@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 
 import userRouter from './routes/auth.router.js';
 import rentingOutRouter from './routes/listing.router.js';
+import AppError from './utils/AppError.js';
+import globalErrorHandler from './middlewares/globalErrorHandler.js';
 
 const app = express();
 const PORT = process.env.PORT;
@@ -16,6 +18,12 @@ app.use(cookieParser());
 
 app.use(userRouter);
 app.use('/listing', rentingOutRouter);
+
+app.all('*', (req, res, next) => {
+    next(new AppError(`This path ${req.originalUrl} isn't on this server!`, 404));
+});
+
+app.use(globalErrorHandler)
 
 mongoose.connect(DB_CONNECTION_STRING)
 .then(() => {
