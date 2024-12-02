@@ -65,7 +65,7 @@ export const singIn = async(req, res) => {
         }
     
         const token = jwt.sign(
-            { _id: user._id },
+            { userId: user._id },
             process.env.SECRET_KEY,
             {
                 expiresIn: "1d"
@@ -78,7 +78,6 @@ export const singIn = async(req, res) => {
             secure: true,
         });
         const { password: pass,  ...restUserData } = user._doc;
-        console.log(restUserData)
         res.status(200).json({
             status: 200,
             success: true,

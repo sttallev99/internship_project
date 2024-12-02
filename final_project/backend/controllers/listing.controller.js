@@ -5,6 +5,7 @@ export const getAllListings = async (req, res) => {
     try {
         const rentingOutListings = await getAllRentingOutListings();
         const searchedForListings = await getAllSearchedForListings();
+        console.log(req.userId)
 
         res.status(200).json({
             success: true,
