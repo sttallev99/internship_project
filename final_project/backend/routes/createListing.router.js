@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { createRentOut } from "../controllers/rentingOut.controller.js";
+import { createRentOut, createSearchFor } from "../controllers/createListing.controller.js";
 
 const router = Router();
 
-router.post('/rent-out', createRentOut)
+router.post('/rent-out', createRentOut);
+router.post('/searching-for', createSearchFor)
 
 export default router;
