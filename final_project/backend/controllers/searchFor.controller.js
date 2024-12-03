@@ -1,4 +1,4 @@
-import { createSearchedForListing, getSingleSearchedForListing } from "../services/searchedFor.services.js";
+import { createSearchedForListing, getAllSearchedForListings, getSingleSearchedForListing } from "../services/searchedFor.services.js";
 import AppError from "../utils/AppError.js";
 
 export const createSearchFor = async (req, res) => {
@@ -28,4 +28,14 @@ export const getSingleSearchedFor = async (req, res, next) => {
     } catch(err) {
         next(err);
     }
+}
+
+export const getAllSearchedFor = async (req, res, next) => {
+    try {
+        const searchedForListings = await getAllSearchedForListings();
+        res.status(200).json({searchedForListings})
+    } catch(err) {
+        next(new AppError(err.message, 400));
+    }
+
 }
