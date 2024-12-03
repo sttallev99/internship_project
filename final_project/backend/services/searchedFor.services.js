@@ -11,3 +11,7 @@ export const getAllSearchedForListings = async () => {
 export const getSingleSearchedForListing = async (id) => {
     return await SearchingFor.findById(id);
 }
+
+export const updateSearchedForListing = async (id, data) => {
+    return await SearchingFor.findByIdAndUpdate(id, data, {new: true});
+}
