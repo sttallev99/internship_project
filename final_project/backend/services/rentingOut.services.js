@@ -7,3 +7,7 @@ export const createRentingOutListing = async (listing) => {
 export const getAllRentingOutListings = async () => {
     return await RentingOut.find({});
 }
+
+export const getSingleRentOutListing = async (id) => {
+    return await RentingOut.findById(id)
+}

@@ -7,3 +7,7 @@ export const createSearchedForListing = async (listing) => {
 export const getAllSearchedForListings = async () => {
     return await SearchingFor.find({});
 }
+
+export const getSingleSearchedForListing = async (id) => {
+    return await SearchingFor.findById(id);
+}
