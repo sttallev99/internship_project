@@ -11,3 +11,7 @@ export const getAllRentingOutListings = async () => {
 export const getSingleRentOutListing = async (id) => {
     return await RentingOut.findById(id)
 }
+
+export const updateRentOutListing = async (id, data) => {
+    return await RentingOut.findByIdAndUpdate(id, data, {new: true});
+}
