@@ -15,3 +15,7 @@ export const getSingleRentOutListing = async (id) => {
 export const updateRentOutListing = async (id, data) => {
     return await RentingOut.findByIdAndUpdate(id, data, {new: true});
 }
+
+export const deleteRentOutListing = async(id) => {
+    await RentingOut.findByIdAndDelete(id);
+}
