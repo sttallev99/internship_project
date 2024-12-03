@@ -15,3 +15,7 @@ export const getSingleSearchedForListing = async (id) => {
 export const updateSearchedForListing = async (id, data) => {
     return await SearchingFor.findByIdAndUpdate(id, data, {new: true});
 }
+
+export const deleteSearchForListing = async (id) => {
+    await SearchingFor.findByIdAndDelete(id);
+}

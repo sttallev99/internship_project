@@ -1,4 +1,4 @@
-import { createSearchedForListing, getAllSearchedForListings, getSingleSearchedForListing, updateSearchedForListing } from "../services/searchedFor.services.js";
+import { createSearchedForListing, deleteSearchForListing, getAllSearchedForListings, getSingleSearchedForListing, updateSearchedForListing } from "../services/searchedFor.services.js";
 import AppError from "../utils/AppError.js";
 
 export const createSearchFor = async (req, res) => {
@@ -59,5 +59,25 @@ export const updateSearchFor = async (req, res, next) => {
         });
     } catch(err) {
         next(new AppError(err.message, 400))
+    }
+}
+
+export const deleteSearchFor = async (req, res, next) => {
+    const listingId = req.params.search_for_id;
+    try {
+        const listing = await getSingleSearchedForListing(listingId);
+
+        if(!listing) {
+            return next(new AppError('Listing not found', 404));
+        }
+        if(req.userId !== listing.userRef) {
+            return next(new AppError('You can only delete your own listings', 401));
+        }
+        await deleteSearchForListing(listingId);
+        res.status(300).json({
+            message: "Listing deleted successfully"
+        });
+    } catch(err) {
+        next(new AppError(err.message, 400));
     }
 }
