@@ -21,8 +21,6 @@ export const getSingleSearchedFor = async (req, res, next) => {
     try {
         const searchedForListing = await getSingleSearchedForListing(req.params.search_for_id);
 
-        console.log(searchedForListing)
-
         if(!searchedForListing) {
             throw new AppError('Listing not found', 404);
         }

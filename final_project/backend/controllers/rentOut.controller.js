@@ -1,4 +1,4 @@
-import { createRentingOutListing, getSingleRentOutListing } from "../services/rentingOut.services.js";
+import { createRentingOutListing, getAllRentingOutListings, getSingleRentOutListing } from "../services/rentingOut.services.js";
 import AppError from "../utils/AppError.js";
 
 export const createRentOut = async (req, res) => {
@@ -28,6 +28,14 @@ export const getSingleRentOut = async (req, res, next) => {
     } catch(err) {
         next(err);
     }
-    
+}
+
+export const getAllRentOut = async (req, res) => {
+    try {
+        const rentOuts = await getAllRentingOutListings();
+        res.status(200).json({rentOuts});
+    } catch(err) {
+        next(new AppError(err.message, 400));
+    }
 }
 
