@@ -1,0 +1,262 @@
+.listing__slider--section {
+    height: 50vh;
+}
+
+.listing__details--section {
+    padding: 5rem 0;
+
+    .container {
+        padding: 0 10rem;
+        display: flex;
+        gap: 4rem;
+
+        .listing__left__content {
+            width: 80%;
+            // background-color: red;
+            padding: 0 1.5rem;
+
+            .listing__details--wrapper {
+                .listing__details--content {
+                    .listing__details--content_top {
+                        margin-bottom: 1.5rem;
+                        display: flex;
+                        // border: 1px solid red;
+                        justify-content: space-between;
+                        align-items: center;
+
+                        .listing__details--meta {
+                            .listing__details--meta__wrapper {
+                                display: flex;
+                                align-items: center;
+                                gap: 1.5rem;
+
+                                & > li {
+                                    background-color: white;
+                                    display: flex;
+                                    gap: 0.5rem;
+                                    padding: 0.5rem;
+                                    border-radius: 0.5rem;
+
+                                    .listing__details--meta__icon {
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        color: #FA4A4A;
+                                    }
+                                }
+                            }
+                        }
+
+                        .listing__details--wishlist__btn {
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 2rem;
+                            background-color: white;
+                            padding: 0.5rem;
+                            border: 1px solid lightgray;
+                            border-radius: 0.5rem;
+                            color: lightgray;
+                        }
+                    }
+
+                    .listing__details--content__step {
+                        .listing__details--title {
+                            font-size: 2rem;
+                            line-height: 2rem;
+                            margin-bottom: 1.5rem;
+                        }
+
+                        .listing__details--price__id {
+                            margin-bottom: 1.5rem;
+                            display: flex;
+                            gap: 5rem;
+                            font-weight: 600;
+
+                            .listing__details--price {
+                                display: flex;
+                                align-items: center;
+                                gap: 1rem;
+                            }
+                        }
+
+                        .listing__details--location {
+                            display: flex;
+                            align-items: center;
+
+                            & > span {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                color: #FA4A4A;
+                                font-size: 1.5rem;
+                            }
+                        }
+                    }
+
+                }
+
+                .listing__details--main__content {
+                    padding: 4rem 2rem 0;
+
+                    .listing__details--content__step {
+                        .listing__details--content__title {
+                            font-size: 1.2rem;
+                            padding-left: 0.5rem;
+                            border-left: 2px solid lightgray;
+                            margin-bottom: 1rem;
+                        }
+
+                        .listing__details--content__desc {
+                            font-size: 1.1rem;
+                            line-height: 1.8rem;
+                            margin-bottom: 2.5rem;
+                        }
+
+                        .apartment__info {
+                            display: flex;
+                            width: fit-content;
+                            padding-bottom: 1rem;
+                            border-bottom: 1px solid lightgray;
+
+                            .apartment__info--list {
+                                display: flex;
+                                gap: 0.5rem;
+                                align-items: end;
+                                
+                                &:nth-child(1) {
+                                    border-right: 1px solid lightgray;
+                                    padding-right: 1rem;
+                                    margin-right: 1rem;
+                                }
+
+                                &:nth-child(2) {
+                                    border-right: 1px solid lightgray;
+                                    padding-right: 1rem;
+                                    margin-right: 1rem;
+                                }
+
+                                .apartmen__info--icon {
+                                    & > img {
+                                        width: 3rem;
+                                        height: auto;
+                                    }
+                                }
+
+                                & > p {
+                                    display: flex;
+                                    flex-direction: column;
+                                    gap: 0.2rem;
+
+                                    & > span:first-child {
+                                        width: fit-content;
+                                        width: 1.5rem;
+                                        height: 1.5rem;
+                                        border-radius: 50%;
+                                        display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        color: #FA4A4A;
+                                        font-weight: 600;
+                                        border: 1px solid lightgray
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .listing__right__content {
+            width: 30%;
+            .listing__widget {
+                border: 1px solid lightgray;
+                border-radius: .5rem;
+
+                .listing__admin--profile {
+                    padding: 3rem 2rem;
+
+                    .admin__profile--thumbnail {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        & img {
+                            width: 10rem;
+                            height: auto;
+                            border-radius: 50%;
+                        }
+                    }
+                }
+
+                .admin__profile--content {
+                    margin: 0 3rem;
+
+                    .admin__profile--name {
+                        text-align: center;
+                        font-size: 1.3rem;
+                        margin-bottom: 1rem;
+                    }
+
+                    .admin__profile--rating {
+                        display: flex;
+                        gap: 0.3rem;
+                        justify-content: center;
+                        margin-bottom: 1rem;
+                        
+                        & > li  {
+                            color: #FA4A4A;
+                            font-size: 1.3rem;
+                            cursor: pointer;
+                        }
+                    }
+
+                    .admin__profile--desc {
+                        text-align: center;
+                        line-height: 1.5rem;
+                        margin-bottom: 1.5rem;
+                    }
+
+                    .admin__profile--email {
+                        display: flex;
+                        justify-content: center;
+                        font-weight: bold;
+                        margin-bottom: 1rem;
+                    }
+
+                    .profile__social {
+                        display: flex;
+                        justify-content: center;
+                        margin-bottom: 2rem;
+                        gap: 1rem;
+
+                        .profile__social--list {
+                            border: 1px solid lightgray;
+                            border-radius: .5rem;
+
+                            &:hover {
+                                border-color: gray;
+                            }
+
+                            .profile__social--icon {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                padding: .5rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.new_price {
+    font-size: 1.5rem;
+    color: #FA4A4A;
+}
+
+.old_price {
+    text-decoration:line-through;
+}

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import "dotenv/config";
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 import userRouter from './routes/auth.router.js';
 import rentingOutRouter from './routes/listing.router.js';
@@ -15,7 +16,7 @@ const DB_CONNECTION_STRING = process.env.DB_CONNECTION_STRING;
 
 app.use(bodyParser.json());
 app.use(cookieParser());
-
+app.use(cors())
 app.use(userRouter);
 app.use('/listing', rentingOutRouter);
 
@@ -32,4 +33,4 @@ mongoose.connect(DB_CONNECTION_STRING)
         console.log(`Server started at http://localhost:${PORT}`)
     })
 })
-.catch(error => handleError(error));
+.catch(error => new AppError(error.message, 500));

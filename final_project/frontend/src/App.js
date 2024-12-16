@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from 'react-router-dom'
+
+
+import Carousel from "./components/carousel/Carousel";
+import Register from "./pages/register/Register";
+import { images } from "./components/carousel/data";
+import Home from "./pages/home/Home";
+import Properties from "./pages/properties/Properties";
+import ListingDetails from "./pages/listing_details/ListingDetails";
+import Profile from "./pages/profile/Profile";
+import MyListings from "./pages/my_listings/MyListings";
+import ListingForm from "./pages/listing_form/ListingForm";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Register />} />
+        <Route path='/listings' element={<Properties />} />
+        <Route path='/listing-details/:listing_id' element={<ListingDetails />} />
+        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile/own-listings' element={<MyListings />} />
+        <Route path='/profile/create-listing' element={<ListingForm />} />
+        <Route path='/profile/edit-listing/:listing_id' element={<ListingForm />} />
+        <Route path='*' element={<h1>Not Found</h1>} />
+      </Routes>
+      {/* <Register /> */}
+      {/* <Home /> */}
+      {/* <Properties /> */}
+      {/* <ListingDetails /> */}
+      {/* <Profile /> */}
+      {/* <MyListings /> */}
     </div>
   );
 }

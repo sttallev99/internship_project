@@ -3,8 +3,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from "bcrypt"
 
 export const signUp = async (req, res) => {
+    console.log(req.body)
     try {
         const { firstName, lastName, nickname, email, phoneNumber, password} = req.body;
+        console.log(firstName, lastName, nickname, email, phoneNumber, password)
     
         const user = await getUser(email);
     

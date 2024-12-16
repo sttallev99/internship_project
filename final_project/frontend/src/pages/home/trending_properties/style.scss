@@ -1,0 +1,52 @@
+.featred__list {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+
+    .container {
+        width: fit-content;
+        margin: 0 auto;
+
+        .section__heading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            
+            .section__heading--title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .featured__inner {
+            .featured__inner--content {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+                
+            }
+
+            .featured__properties--footer {
+                width: fit-content;
+                margin: 0 auto;
+                margin-top: 2rem;
+
+                .solid_btn {
+                    display: flex;
+                    gap: 3px;
+                    background-color: #fa4a4a;
+                    padding: 15px 30px;
+                    border-radius: 10px;
+                    align-items: center;
+                    color: white;
+                    font-size: 18px;
+                    font-weight: 600;
+
+                    & > span {
+                        border-radius: 1rem;
+                    }
+                }
+            }
+        }
+    }
+}

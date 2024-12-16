@@ -1,0 +1,111 @@
+$color: red;
+
+.header__section {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 99;
+    background-color: white;
+
+    .header__sticky {
+        display: flex;
+        margin: 0 auto;
+        justify-content: space-between;
+        padding: 10px 5%;
+
+        .main__logo--img {
+            height: 50px;
+        }
+
+        .main__menu {
+            display: flex;
+            align-items: center;
+
+            .main__men--wrapper {
+                display: flex;
+                gap: 40px;
+
+                .main__menu--items {
+                    text-decoration: none;
+                    font-size: 18px;
+                    font-weight: bold;
+                    
+                    .main__menu--link {
+                        text-decoration: none;
+                        position: relative;
+                        display: block;
+                        color: #26232a;
+                        transition: all 500ms cubic-bezier(0.075, 0.82, 0.165, 1);
+                        
+                        &:after {
+                            content: "";
+                            position: absolute;
+                            width: 0%;
+                            height: 1px;
+                            display: block;
+                            transition: all 0.3s ease;
+                            bottom: 0;
+                        }
+                        &:hover::after {
+                            width: 100%;
+                            height: 1px;
+                            background-color: #fa4a4a;
+                        }
+                        &:hover{
+                            color: #fa4a4a;
+                        }
+                    }
+                }
+
+            }
+        }
+
+        .main__header--right {
+            display: flex;
+            align-items: center;
+
+            .login__register--link{
+                text-decoration: none;
+                color: #26232a;
+                font-size: 18px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 15px 30px;
+                border-radius: 10px;
+                transition: 300ms;
+
+                &:hover {
+                    color: white;
+                    background-color: #fa4a4a;
+                }
+
+            }
+
+            .add__listing--btn {
+                text-decoration: none;
+                display: flex;
+                gap: 3px;
+                background-color: red;
+                padding: 15px 30px;
+                border-radius: 10px;
+                align-items: center;
+                color: white;
+                font-size: 18px;
+                font-weight: 600;
+
+                &:hover{
+                    background-color: #26232a;
+                    transition: 300ms;
+                }
+            }
+        }
+    }
+
+}
+
+.shadow {
+    box-shadow: 0px 4px 8px 0px #D3D3D3;
+}

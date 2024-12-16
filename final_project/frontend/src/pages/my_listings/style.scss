@@ -1,0 +1,83 @@
+.my__listing__page--section {
+    display: flex;
+
+    .dashboard__container {
+        padding: 2rem;
+        width: 100%;
+
+        .properties__wrapper {
+            border: 1px solid lightgray;
+            padding-bottom: 2rem;
+
+            .properties__table {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+
+                .properties__table--wrapper {
+                    width: 100%;
+
+                    td, th {
+                        padding: 1.5rem;
+                    }
+
+                    thead {
+                        & > th {
+                            text-align: left;
+                            background-color: #f8fafc;
+                        }
+                    }
+
+                    tbody > tr > td{
+                        border-bottom: 1px solid lightgray;
+                        background-color: white;
+                    }
+
+                    .properties__author {
+                        display: flex;
+                        min-width: 20rem;
+                        gap: 1rem;
+
+                        .properties__author--thumb > img {
+                            width: 5rem;
+                            height: 5rem;
+                            border-radius: .5rem;
+                            object-fit: cover;
+                        }
+
+                        .review__author--text {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+
+                            .properties__author--price {
+                                font-weight: 700;
+                                color: green;
+                            }
+                        }
+                    }
+
+                    .status {
+                        background-color: lightgray;
+                        padding: .5rem 1rem;
+                        border-radius: 1rem;
+                    }
+
+                    .reviews__action--wrapper {
+                        .review__action--btn {
+                            cursor: pointer;
+                        }
+                        .dropdown__menu {
+                            border: 1px solid lightgray;
+                            width: fit-content;
+                            padding: .5rem 1rem;
+                            position: absolute;
+                            background-color: white;
+                            border-radius: .5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

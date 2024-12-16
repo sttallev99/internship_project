@@ -1,0 +1,113 @@
+.hero__section {
+    background: url('../../assets/hero-section-bg2.png');
+    height: 92vh;
+    position: relative;
+    
+    .hero__container {
+        position: absolute;
+        width: 100%;
+        // background-color: red;
+        bottom: 0px;
+
+        .container {
+            padding-left: 16rem;
+            padding-right: 16rem;
+
+            .hero__content{
+                max-width: 60rem;
+                margin-bottom: 14rem;
+                // background-color: blue;
+
+                .hero__content--heading__title {
+                    font-size: 4rem;
+                    line-height: 5rem;
+                    margin: 1rem 0;
+                }
+
+                .hero__content--heading__desc {
+                    font-size: 18px;
+                }
+                
+                .hero__content--footer {
+                    margin-top: 3rem;
+
+                    .solid__btn {
+                        padding: 0.8rem 3rem;
+                        background-color: #fa4a4a;
+                        border-radius: 10px;
+                        color: white;
+                        letter-spacing: 0.2;
+                        font-weight: 700;
+                    }
+                }
+            }
+
+            .advance__search--filter {
+                width: fit-content;
+                .advance__tab--btn__two {
+                    background-color: white;
+                    display: flex;
+                    width: fit-content;
+
+                    .advance__tab--btn__list {
+                        padding: 10px 25px;
+                        cursor: pointer;
+
+                        .advance__tab--btn__field {
+                            color: black;
+                            font-weight: 700;
+                            font-size: 0.8rem;
+                        }
+                    }
+                    
+                    .active {
+                        background-color: #fa4a4a;
+                        
+                        .advance__tab--btn__field {
+                            color: white;
+                        }
+                    }
+                }
+
+                .tab__content {
+                    background-color: white;
+
+                    .advance__search--innter{
+                        display: flex;
+                        padding: 1.5rem;
+                        gap: 2rem;
+
+                        .advance__two--search__items {
+                            display: flex;
+                            flex-direction: column;
+                            gap: 1rem;
+                            border-right: 1px solid lightgray;
+                            padding-right: 5rem;
+
+                            .advance__search--label {
+                                font-weight: 500;
+                            }
+
+                            .advance__search--input {
+                                display: block;
+                                outline: none;
+                            }
+                        }
+
+                        .advance__search--btn {
+                            background-color: #fa4a4a;
+                            padding: 0 1.5rem;
+                            border-radius: 10px;
+                            color: white;
+                            font-size: 2rem;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
