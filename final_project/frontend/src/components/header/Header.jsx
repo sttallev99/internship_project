@@ -5,8 +5,10 @@ import { BsPersonAdd } from "react-icons/bs";
 import logo from '../../assets/nav-logo.png'
 import './style.scss'
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Header = () => {
+    const { user } = useSelector((state) => state.user);
     const headerRef = useRef(null);
     const observerRef = useRef(null);
     
@@ -40,15 +42,18 @@ const Header = () => {
                             </Link>
                         </li>
                         <li className='main__menu--items'>
-                            <a href='/listings' className='main__menu--link'>
+                            <Link to='/listings' className='main__menu--link'>
                                 Listing
-                            </a>
-                        </li>
-                        <li className='main__menu--items'>
-                            <Link to='/profile' className='main__menu--link'>
-                                My Profile
                             </Link>
                         </li>
+                        {
+                            user  && 
+                            <li className='main__menu--items'>
+                                <Link to='/profile' className='main__menu--link'>
+                                    My Profile
+                                </Link>
+                            </li>
+                        }
                         <li className='main__menu--items'>
                             <a href="#" className='main__menu--link'>
                                 News
@@ -63,14 +68,18 @@ const Header = () => {
                 </nav>
             </div>
             <div className='main__header--right'>
-                <Link className="login__register--link" to='/login'>
-                    <BsPersonAdd style={{ fontSize: '25px'}}/>
-                    <span>Login / Register</span>
-                </Link>
-                <Link to="/profile/create-listing" className='add__listing--btn'>
-                    <span>Add Listing</span>
-                    <HiPlusCircle style={{ fontSize: '20px'}}/>
-                </Link>
+                {user 
+                ?   
+                    <Link to="/profile/create-listing" className='add__listing--btn'>
+                        <span>Add Listing</span>
+                        <HiPlusCircle style={{ fontSize: '20px'}}/>
+                    </Link>
+                : 
+                    <Link className="login__register--link" to='/login'>
+                        <BsPersonAdd style={{ fontSize: '25px'}}/>
+                        <span>Login / Register</span>
+                    </Link>
+            }
             </div>
         </div>
     </header>

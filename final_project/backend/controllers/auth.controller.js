@@ -6,7 +6,6 @@ export const signUp = async (req, res) => {
     console.log(req.body)
     try {
         const { firstName, lastName, nickname, email, phoneNumber, password} = req.body;
-        console.log(firstName, lastName, nickname, email, phoneNumber, password)
     
         const user = await getUser(email);
     
@@ -43,6 +42,7 @@ export const singIn = async(req, res) => {
     try {
 
         const { email, password } = req.body;
+        console.log(req.body)
     
         const user = await getUser(email);
 
@@ -75,7 +75,6 @@ export const singIn = async(req, res) => {
         );
     
         res.cookie("access_token", token, {
-            maxAge: 20 * 60 * 1000,
             httpOnly: true,
             secure: true,
         });

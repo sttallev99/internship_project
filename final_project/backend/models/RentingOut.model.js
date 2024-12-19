@@ -10,8 +10,12 @@ const rentingOutSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    footage: {
-        type: Array,
+    country: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
         required: true
     },
     address: {
@@ -21,6 +25,29 @@ const rentingOutSchema = new mongoose.Schema({
     price: {
         type: Number,
         required: true
+    },
+    newPrice: {
+        type: Number,
+    },
+    bedrooms: {
+        type: Number,
+        required: true
+    },
+    bathrooms: {
+        type: Number,
+        required: true
+    },
+    footage: {
+        type: String,
+        required: true
+    },
+    propertyType: {
+        type: String,
+        enum: ['Apartment', "Container Home", "Tiny Home", "Villa Type", "Duplex Modern Houses"],
+        required: true,
+    },
+    images: {
+        type: Array
     },
     userRef: {
         type: String,

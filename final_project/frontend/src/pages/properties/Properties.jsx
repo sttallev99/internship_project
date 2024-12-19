@@ -1,4 +1,7 @@
 import { BiSort } from "react-icons/bi";
+import { useEffect, useState } from "react";
+import axios from 'axios'
+import { baseUrl } from '../../constants'
 
 import './style.scss';
 import Filter from './filter/Filter'
@@ -6,12 +9,26 @@ import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
 import PropertyCard from '../../components/property_card/PropertyCard';
 import Pagination from '../../components/pagination/Pagination'
-import { useState } from "react";
 
 const Properties = () => {
     
     const [currentPage, setCurrentPage] = useState(1);
-    const [lastPage, setLastPage] = useState(10)
+    const [lastPage, setLastPage] = useState(null)
+    const [listings, setListings] = useState([]);
+
+    useEffect(() => {
+        const fetchListings = async() => {
+            const response = await axios.get(`${baseUrl}/listing?page=${currentPage}&limit=5`);
+            setLastPage(response.data.listingsData.metaData.totalPages)
+            setListings([
+                ...response.data.listingsData.data
+            ]);
+        }
+
+        fetchListings();
+    },[currentPage])
+
+    console.log('page num', lastPage)
 
     return (
         <>
@@ -39,12 +56,7 @@ const Properties = () => {
                                 </div>
                                 <div className="listing__main--content">
                                     <div className="listing__featured--list">
-                                        <PropertyCard />
-                                        <PropertyCard />
-                                        <PropertyCard />
-                                        <PropertyCard />
-                                        <PropertyCard />
-                                        <PropertyCard />
+                                        {listings.map(listing => <PropertyCard data={listing} />)}
                                     </div>
                                     <Pagination currentPage={currentPage} lastPage={lastPage} maxLength={7} setCurrentPage={setCurrentPage} />
                                 </div>

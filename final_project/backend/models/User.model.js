@@ -34,7 +34,11 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    profilePicture: {
+        type: String,
+        default: 'https://static.vecteezy.com/system/resources/previews/001/840/612/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg'
+    },
 });
 
 userSchema.pre('save', function(next) {

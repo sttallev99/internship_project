@@ -10,8 +10,11 @@ import ListingDetails from "./pages/listing_details/ListingDetails";
 import Profile from "./pages/profile/Profile";
 import MyListings from "./pages/my_listings/MyListings";
 import ListingForm from "./pages/listing_form/ListingForm";
+import PrivateRoute from './PrivateRoute';
+import axios from 'axios';
 
 function App() {
+  axios.defaults.withCredentials = true;
   return (
     <div className="App">
       <Routes>
@@ -20,18 +23,14 @@ function App() {
         <Route path='/login' element={<Register />} />
         <Route path='/listings' element={<Properties />} />
         <Route path='/listing-details/:listing_id' element={<ListingDetails />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/profile/own-listings' element={<MyListings />} />
-        <Route path='/profile/create-listing' element={<ListingForm />} />
-        <Route path='/profile/edit-listing/:listing_id' element={<ListingForm />} />
+        <Route element={<PrivateRoute />}>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/own-listings' element={<MyListings />} />
+          <Route path='/profile/create-listing' element={<ListingForm />} />
+          <Route path='/profile/edit-listing/:listing_id' element={<ListingForm />} />
+        </Route>
         <Route path='*' element={<h1>Not Found</h1>} />
       </Routes>
-      {/* <Register /> */}
-      {/* <Home /> */}
-      {/* <Properties /> */}
-      {/* <ListingDetails /> */}
-      {/* <Profile /> */}
-      {/* <MyListings /> */}
     </div>
   );
 }

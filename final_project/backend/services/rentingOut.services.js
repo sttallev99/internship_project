@@ -19,3 +19,44 @@ export const updateRentOutListing = async (id, data) => {
 export const deleteRentOutListing = async(id) => {
     await RentingOut.findByIdAndDelete(id);
 }
+
+
+export const allListings = async(page = 1, limit = 3) => {
+    const allListings = RentingOut.aggregate([
+        {
+            $unionWith: {
+                coll: "searchingfors",
+            },  
+        },
+        {
+            $sort: {
+                createdAt: -1,
+            },
+        },
+        {
+            $facet: {
+                metaData: [
+                    {
+                        $count: 'totalDocuments'
+                    },
+                    {
+                        $addFields: {
+                            pageNumber: page,
+                            totalPages: { $ceil: { $divide: ["$totalDocuments", limit] } }
+                        }
+                    }
+                ],
+                data: [
+                    {
+                        $skip: (page - 1) * limit
+                    },
+                    {
+                        $limit: limit
+                    }
+                ]
+            }
+        }
+    ]);
+    
+    return allListings;
+}

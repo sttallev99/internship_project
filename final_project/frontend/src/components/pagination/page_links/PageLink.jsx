@@ -2,6 +2,7 @@ import React from 'react'
 
 import cn from 'classnames';
 import "./style.scss";
+import { Link } from 'react-router-dom';
 
 const PageLink = ({className, children, disabled, active, ...props}) => {
     const customClassName = cn('page-link', className, { active, disabled })
@@ -10,9 +11,9 @@ const PageLink = ({className, children, disabled, active, ...props}) => {
     }
     
     return (
-        <a {...props} className={customClassName} area-current={active ? 'page' : undefined}>
+        <Link {...props} className={customClassName} area-current={active ? 'page' : undefined}>
             {children}
-        </a>
+        </Link>
     )
 }
 

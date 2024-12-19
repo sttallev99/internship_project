@@ -60,6 +60,8 @@
     }
 
     .featured__card--list__content {
+        width: 100%;
+        flex-shrink: 5;
         .featured__card--list__top {
             display: flex;
             justify-content: space-between;
@@ -122,7 +124,8 @@
 
         .featured__content--list__footer {
             display: flex;
-            gap: 27rem;
+            // gap: 27rem;
+            justify-content: space-between;
 
             .listing__details--btn {
                 padding: 0.5rem;

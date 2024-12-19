@@ -7,8 +7,6 @@ import { getPaginationItems } from '../../utils/pagination.js'
 const Pagination = ({currentPage, lastPage, maxLength, setCurrentPage}) => {
     const pageNums = getPaginationItems(currentPage, lastPage, maxLength);
 
-    console.log(pageNums)
-
     return (
         <nav className='pagination' aria-label='Pagination'>
             <PageLink 

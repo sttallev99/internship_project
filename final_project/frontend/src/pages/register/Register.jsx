@@ -1,27 +1,89 @@
 import React, { useRef, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb';
 import Header from '../../components/header/Header';
 import './style.scss';
 import Footer from '../../components/footer/Footer';
 import { baseUrl } from '../../constants';
+import { addUser } from '../../features/userSlice';
 
 const LoginForm = () => {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+    const [errors, setErrors] = useState({});
+
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const handleOnChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    }
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const validationErrors = {};
+
+        if(!formData.email.trim()) {
+            validationErrors.email = 'Email required'
+        } else if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.email)) {
+            validationErrors.email = 'Email is not valid'
+        }
+        if(!formData.password.trim()) {
+            validationErrors.password = 'Password required';
+        }
+
+        setErrors(validationErrors);
+
+        if(Object.keys(validationErrors).length === 0 ) {
+            try {
+                const response = await axios.post(`${baseUrl}/sign-in`, formData);
+                if(response.data.success) {
+                    dispatch(addUser(response.data.user));
+                    navigate('/')
+                }
+
+            } catch(err) {
+                console.log(err)
+            }
+        }
+
+    }
+
     return (
         <>
             <form action="#" className='account__form--conrainer'>
                 <div className='account__form--input'>
                     <label htmlFor='email' className='account__form--input__label'>Email Address</label>
-                    <input type="text" className='account__form--input__field' id='email' placeholder='Enter Emai Address*' />
+                    <input 
+                        type="text" 
+                        className='account__form--input__field' 
+                        id='email' 
+                        placeholder='Enter Emai Address*'
+                        name='email'
+                        onChange={handleOnChange}
+                    />
                 </div>
-                
                 <div className='account__form--input'>
                     <label htmlFor='password' className='account__form--input__label'>Password</label>
-                    <input type="text" className='account__form--input__field' id='password' placeholder='Create password*' />
+                    <input 
+                        type="password" 
+                        className='account__form--input__field' 
+                        id='password' 
+                        placeholder='Create password*'
+                        name='password'
+                        onChange={handleOnChange}
+                    />
                 </div>
-                <button className='account__form--btn' type='submit'>Login</button>
+                <button className='account__form--btn' type='submit' onClick={handleSubmit}>Login</button>
             </form>
         </>
     )

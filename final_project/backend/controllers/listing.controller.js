@@ -1,15 +1,14 @@
-import { getAllRentingOutListings } from "../services/rentingOut.services.js"
-import { getAllSearchedForListings } from "../services/searchedFor.services.js";
+import { allListings } from "../services/rentingOut.services.js"
 
 export const getAllListings = async (req, res) => {
+    const { page, limit } = req.query;
     try {
-        const rentingOutListings = await getAllRentingOutListings();
-        const searchedForListings = await getAllSearchedForListings();
-        console.log(req.userId)
-
+        let data = await allListings(Number(page), Number(limit));
+        data = data[0];
+        data.metaData = {...data.metaData[0]}
         res.status(200).json({
             success: true,
-            listings: [...rentingOutListings, ...searchedForListings]
+            listingsData: data
         })
     } catch(err) {
         res.status(400).json({
