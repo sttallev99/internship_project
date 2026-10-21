@@ -1,17 +1,41 @@
+@use '../../styles/breakpoints' as bp;
 
 .listing__page--section {
     padding-top: 2rem;
     padding-bottom: 2rem;
+
     .container {
         padding-left: 8rem;
         padding-right: 8rem;
-        
+
+        @media (max-width: 1400px) {
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+
+        @include bp.tablet {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+        }
+
         .row {
             display: flex;
             gap: 3rem;
 
+            // Filters above the results.
+            @include bp.tablet {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
             .col-lg-8 {
                 width: 70%;
+                min-width: 0;
+
+                @include bp.tablet {
+                    width: 100%;
+                }
+
                 .listing__page--wrapper {
                     display: block;
                     .listing__header {
@@ -19,6 +43,8 @@
                         border-radius: 0.5rem;
                         margin-bottom: 2rem;
                         display: flex;
+                        flex-wrap: wrap;
+                        gap: .75rem;
                         justify-content: space-between;
                         padding: 1rem 1rem;
                         align-items: center;
@@ -42,6 +68,10 @@
                             display: flex;
                             flex-direction: column;
                             gap: 2rem;
+
+                            @include bp.mobile {
+                                gap: 1.25rem;
+                            }
                         }
                     }
                 }

@@ -1,9 +1,19 @@
+@use '../../styles/breakpoints' as bp;
+
 .accout__page--section {
     padding: 5rem 0;
+
+    @include bp.mobile {
+        padding: 2.5rem 0;
+    }
 
     .container {
         max-width: 33rem;
         margin: 0 auto;
+
+        @include bp.mobile {
+            padding: 0 1rem;
+        }
 
         .account__tab--btn {
             width: fit-content;
@@ -22,6 +32,11 @@
                     font-weight: 500;
                     letter-spacing: 1px;
                     cursor: pointer;
+
+                    @include bp.small {
+                        padding: 12px 28px;
+                        font-size: 18px;
+                    }
                 }
 
                 .active {
@@ -36,6 +51,10 @@
             border: 1px solid lightgray;
             padding: 4rem;
             border-radius: 5px;
+
+            @include bp.mobile {
+                padding: 2.5rem 1.25rem 2rem;
+            }
 
             .account__header {
                 display: flex;

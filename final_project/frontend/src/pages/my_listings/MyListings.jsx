@@ -73,16 +73,16 @@ const ListingRow = ({ listing, onDelete, onDecision, onChat }) => {
                     </div>
                 </div>
             </td>
-            <td>
+            <td data-label='Date published'>
                 <span className="reviews__date">{formatDate(listing.createdAt)}</span>
             </td>
-            <td>
+            <td data-label='Status'>
                 <ListingStatus listing={listing} onDecision={onDecision} onChat={onChat} />
             </td>
-            <td>
+            <td data-label='Views'>
                 <span className="properties__views">1210</span>
             </td>
-            <td>
+            <td data-label='Actions'>
                 <div className="reviews__action--wrapper">
                     <button
                         type='button'

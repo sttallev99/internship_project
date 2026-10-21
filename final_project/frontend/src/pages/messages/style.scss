@@ -169,6 +169,8 @@ $border: lightgray;
 
         &--input {
             flex: 1;
+            // Inputs keep a default intrinsic width; allow shrinking so the Send button stays visible.
+            min-width: 0;
             padding: .6rem 1rem;
             border: 1px solid $border;
             border-radius: .5rem;

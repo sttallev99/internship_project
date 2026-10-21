@@ -1,3 +1,5 @@
+@use '../../styles/breakpoints' as bp;
+
 $color: red;
 
 .header__section {
@@ -99,6 +101,73 @@ $color: red;
                 &:hover{
                     background-color: #26232a;
                     transition: 300ms;
+                }
+            }
+        }
+
+        .header__toggle {
+            display: none;
+        }
+
+        // Collapse the navigation into a toggleable menu below the logo.
+        @include bp.tablet {
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 10px 1rem;
+
+            .main__logo--img {
+                height: 42px;
+            }
+
+            .header__toggle {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: .4rem;
+                font-size: 1.75rem;
+                color: #26232a;
+                cursor: pointer;
+            }
+
+            .main__menu,
+            .main__header--right {
+                display: none;
+                width: 100%;
+            }
+
+            &.is-open {
+                .main__menu,
+                .main__header--right {
+                    display: flex;
+                }
+            }
+
+            .main__menu {
+                margin-top: .5rem;
+
+                .main__menu--navigation {
+                    width: 100%;
+                }
+
+                .main__men--wrapper {
+                    flex-direction: column;
+                    gap: 0;
+
+                    .main__menu--items .main__menu--link {
+                        padding: .75rem .25rem;
+                        border-top: 1px solid #eee;
+                    }
+                }
+            }
+
+            .main__header--right {
+                padding: .5rem 0 1rem;
+
+                .login__register--link,
+                .add__listing--btn {
+                    width: 100%;
+                    justify-content: center;
+                    padding: 12px 20px;
                 }
             }
         }

@@ -1,3 +1,5 @@
+@use '../../styles/breakpoints' as bp;
+
 .carousel {
     display: flex;
     height: 80vh;
@@ -93,6 +95,12 @@
             -webkit-box-shadow: 0px 0px 26px -3px rgba(128,128,128,1);
             box-shadow: 0px 0px 26px -3px rgba(128,128,128,1);
 
+            // Straddling the left edge would stick out of the screen once the carousel is full width.
+            @include bp.tablet {
+                left: 12px;
+                transform: translate(0, -50%);
+            }
+
             .pagination__dot {
                 height: 12px;
                 width: 12px;
@@ -120,6 +128,10 @@
     width: 100%;
     position: absolute;
     right: 0px;
+
+    @include bp.mobile {
+        height: 35vh;
+    }
 
     .carousel__wrapper {
         position: relative;

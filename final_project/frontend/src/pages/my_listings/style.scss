@@ -1,9 +1,22 @@
+@use '../../styles/breakpoints' as bp;
+
 .my__listing__page--section {
     display: flex;
+
+    @include bp.tablet {
+        flex-direction: column;
+    }
 
     .dashboard__container {
         padding: 2rem;
         width: 100%;
+        // Lets the wide table scroll inside its wrapper instead of stretching the page.
+        min-width: 0;
+        box-sizing: border-box;
+
+        @include bp.mobile {
+            padding: 1rem;
+        }
 
         .properties__wrapper {
             border: 1px solid lightgray;
@@ -17,8 +30,55 @@
                 .properties__table--wrapper {
                     width: 100%;
 
+                    // Phones: each row becomes a stacked card, cells labelled via data-label.
+                    @include bp.mobile {
+                        thead {
+                            display: none;
+                        }
+
+                        tbody,
+                        tr,
+                        td {
+                            display: block;
+                        }
+
+                        tbody > tr {
+                            border-bottom: 1px solid lightgray;
+                            background-color: white;
+                        }
+
+                        tbody > tr > td {
+                            padding: .5rem 1rem;
+
+                            &:first-child {
+                                padding-top: 1rem;
+                            }
+
+                            &:last-child {
+                                padding-bottom: 1rem;
+                            }
+
+                            &[data-label] {
+                                display: flex;
+                                align-items: flex-start;
+                                justify-content: space-between;
+                                gap: 1rem;
+
+                                &::before {
+                                    content: attr(data-label);
+                                    font-weight: 700;
+                                    flex-shrink: 0;
+                                }
+                            }
+                        }
+                    }
+
                     td, th {
                         padding: 1.5rem;
+
+                        @include bp.mobile {
+                            padding: 1rem;
+                        }
                     }
 
                     thead {
@@ -31,12 +91,21 @@
                     tbody > tr > td{
                         border-bottom: 1px solid lightgray;
                         background-color: white;
+
+                        // Stacked rows on phones draw one border per row instead of per cell.
+                        @include bp.mobile {
+                            border-bottom: none;
+                        }
                     }
 
                     .properties__author {
                         display: flex;
                         min-width: 20rem;
                         gap: 1rem;
+
+                        @include bp.mobile {
+                            min-width: 0;
+                        }
 
                         .properties__author--thumb > img {
                             width: 5rem;
@@ -83,6 +152,16 @@
                     }
 
                     .reviews__action--wrapper {
+                        // On phones the button sits at the right edge, so open the menu leftwards.
+                        @include bp.mobile {
+                            position: relative;
+
+                            .dropdown__menu {
+                                right: 0;
+                                z-index: 5;
+                            }
+                        }
+
                         .review__action--btn {
                             cursor: pointer;
                         }

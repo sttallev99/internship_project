@@ -74,7 +74,7 @@ const Footer = () => {
               <div className='footer__widget'>
                 <h2 className='footer__widget--title'>Quick Links</h2>
                 <ul className='footer__widget--menu'>
-                  <li className='footer__widget--menu_list'>
+                  <li className='footer__widget--menu__list'>
                     <span className='footer__widget--menu__text'>About Us</span>
                   </li>
                   <li className='footer__widget--menu__list'>

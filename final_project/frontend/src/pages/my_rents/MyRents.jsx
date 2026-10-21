@@ -39,13 +39,13 @@ const RentRow = ({ listing }) => (
                 </div>
             </div>
         </td>
-        <td>
+        <td data-label='Last updated'>
             <span className="reviews__date">{formatDate(listing.updatedAt)}</span>
         </td>
-        <td>
+        <td data-label='Status'>
             <span className="status">{RENT_STATUS_LABEL[listing.status] ?? listing.status}</span>
         </td>
-        <td>
+        <td data-label='Chat'>
             {listing.conversationId ? (
                 <Link to={`/profile/messages/${listing.conversationId}`} className="action__btn action__btn--outline">
                     <BsChatDots /> Chat with owner

@@ -1,9 +1,20 @@
+@use '../../styles/breakpoints' as bp;
+
 .profile__page--section {
     display: flex;
 
+    @include bp.tablet {
+        flex-direction: column;
+    }
+
     .main__content--wrapper {
         padding: 2rem;
-        
+        min-width: 0;
+
+        @include bp.mobile {
+            padding: 1rem;
+        }
+
         .dashboard__profile--wrapper {
             background-color: white;
             border-radius: .3rem;
@@ -11,7 +22,7 @@
 
             .profile__backgroung--thumbnail {
                 position: relative;
-                
+
                 & > img {
                     width: 100%;
                     height: auto;
@@ -30,6 +41,11 @@
                     border-radius: .5rem;
                     color: white;
                     font-weight: 600;
+
+                    @include bp.mobile {
+                        bottom: 10px;
+                        right: 10px;
+                    }
                 }
             }
 
@@ -38,6 +54,17 @@
                 display: flex;
                 gap: 8rem;
                 margin-bottom: 4rem;
+
+                @media (max-width: 1200px) {
+                    gap: 3rem;
+                }
+
+                @include bp.tablet {
+                    flex-direction: column;
+                    gap: 1.5rem;
+                    margin-left: 0;
+                    margin-bottom: 2.5rem;
+                }
 
                 .profile__author {
                     display: flex;
@@ -52,8 +79,17 @@
                         border-radius: .5rem;
                         margin-right: 1rem;
 
+                        @include bp.tablet {
+                            margin-top: -60px;
+                            padding: .75rem;
+                        }
+
                         & > img {
                             max-width: 300px;
+
+                            @include bp.tablet {
+                                max-width: 120px;
+                            }
                         }
                     }
 
@@ -66,13 +102,31 @@
 
                 .profile__info {
                     display: flex;
+                    flex-wrap: wrap;
                     gap: 4rem;
                     align-items: center;
+                    min-width: 0;
+
+                    @media (max-width: 1200px) {
+                        gap: 2rem;
+                    }
+
+                    @include bp.mobile {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 1.5rem;
+                    }
 
                     .profile__info--wrapper {
                         display: flex;
                         flex-direction: column;
                         gap: 1.5rem;
+                        max-width: 100%;
+
+                        // Long values such as e-mail addresses wrap instead of overflowing.
+                        .profile__info--text {
+                            overflow-wrap: anywhere;
+                        }
                     }
                 }
             }
@@ -90,6 +144,10 @@
                     width: 60%;
                     text-align: center;
                     margin-bottom: 2rem;
+
+                    @include bp.tablet {
+                        width: 100%;
+                    }
                 }
 
                 .social__share {

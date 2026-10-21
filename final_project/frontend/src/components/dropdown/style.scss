@@ -1,10 +1,12 @@
 .custom__select {
-    min-width: 350px;
+    // Never force the select wider than its container on narrow screens.
+    min-width: min(350px, 100%);
     position: relative;
 
     select {
         appearance: none;
         width: 100%;
+        box-sizing: border-box;
         font-size: 1.15rem;
         padding: 0.675em 6em 0.675em 1em;
         background-color: #fff;
