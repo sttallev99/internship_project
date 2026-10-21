@@ -5,3 +5,5 @@ coverage/
 dist/
 .env
 *.css.map
+# index.css is a hand-written stylesheet, not Sass output
+!final_project/frontend/src/index.css
