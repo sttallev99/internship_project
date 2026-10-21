@@ -1,99 +1,66 @@
-import { getUser, createUser } from "../services/auth.services.js";
-import jwt from 'jsonwebtoken';
-import bcrypt from "bcrypt"
+import type { CookieOptions } from 'express';
 
-export const signUp = async (req, res) => {
-    console.log(req.body)
-    try {
-        const { firstName, lastName, nickname, email, phoneNumber, password} = req.body;
-    
-        const user = await getUser(email);
-    
-        if(user) {
-            res.status(400).json({
-                status: 400,
-                message: "Invalid credentials"
-            });
-            return;
-        }
-    
-        const newUser = await createUser(firstName, lastName, nickname, email, phoneNumber, password);
+import { ACCESS_TOKEN_COOKIE } from '../middlewares/isAuth.js';
+import {
+    ACCESS_TOKEN_TTL_SECONDS,
+    createAccessToken,
+    createUser,
+    findUserByEmail,
+    verifyCredentials,
+    type SignUpInput,
+} from '../services/auth.services.js';
+import AppError from '../utils/AppError.js';
+import catchAsync from '../utils/catchAsync.js';
 
-        res.status(200).json({
-            status: 201,
-            success: true,
-            message: 'User created successfolly!',
-            user: newUser
-        })
+const cookieOptions: CookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+};
 
-    } catch(err) {
-        console.log(err);
+const requireCredentials = (email: unknown, password: unknown): { email: string; password: string } => {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
+        throw new AppError('Email and password are required', 400);
+    }
+    return { email, password };
+};
 
-        res.status(400).json({
-            status: 400,
-            message: err.message.toString()
-        })
+export const signUp = catchAsync(async (req, res) => {
+    const { firstName, lastName, nickname, phoneNumber } = req.body as Partial<SignUpInput>;
+    const { email, password } = requireCredentials(req.body?.email, req.body?.password);
+
+    if (await findUserByEmail(email)) {
+        throw new AppError('A user with this email already exists', 409);
     }
 
-}
+    const user = await createUser({
+        firstName: firstName ?? '',
+        lastName: lastName ?? '',
+        nickname: nickname ?? '',
+        phoneNumber: phoneNumber ?? '',
+        email,
+        password,
+    });
 
-export const singIn = async(req, res) => {
+    res.status(201).json({ success: true, message: 'User created successfully!', user });
+});
 
-    try {
+export const signIn = catchAsync(async (req, res) => {
+    const { email, password } = requireCredentials(req.body?.email, req.body?.password);
 
-        const { email, password } = req.body;
-        console.log(req.body)
-    
-        const user = await getUser(email);
-
-        if(!user) {
-            res.status(404).json({
-                status: 404,
-                success: false,
-                message: "User not found"
-            });
-            return
-        }
-    
-        const isPasswordMatched = await bcrypt.compare(password, user.password);
-    
-        if(!isPasswordMatched) {
-            res.status(400).json({
-                status: 400,
-                succeess: false,
-                message: 'Wrong Password',
-            });
-            return;
-        }
-    
-        const token = jwt.sign(
-            { userId: user._id },
-            process.env.SECRET_KEY,
-            {
-                expiresIn: "1d"
-            }
-        );
-    
-        res.cookie("access_token", token, {
-            httpOnly: true,
-            secure: true,
-        });
-        const { password: pass,  ...restUserData } = user._doc;
-        res.status(200).json({
-            status: 200,
-            success: true,
-            message: "Login successfully",
-            user: restUserData
-        });
-    } catch(err) {
-        res.status(400).json({
-            status: 400,
-            message: err.message.toString(),
-        })
+    const user = await verifyCredentials(email, password);
+    if (!user) {
+        throw new AppError('Invalid email or password', 401);
     }
-}
 
-export const signOut = (req, res) => {
-    res.clearCookie('access_token');
-    res.status(200).json("User has beed logged out!")
-}
+    res.cookie(ACCESS_TOKEN_COOKIE, createAccessToken(user.id), {
+        ...cookieOptions,
+        maxAge: ACCESS_TOKEN_TTL_SECONDS * 1000,
+    });
+    res.status(200).json({ success: true, message: 'Logged in successfully', user });
+});
+
+export const signOut = catchAsync(async (_req, res) => {
+    res.clearCookie(ACCESS_TOKEN_COOKIE, cookieOptions);
+    res.status(200).json({ success: true, message: 'User has been logged out!' });
+});

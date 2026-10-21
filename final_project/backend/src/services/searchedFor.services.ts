@@ -1,21 +1,15 @@
-import SearchingFor from "../models/SearchingFor.model.js"
+import SearchingFor from '../models/SearchingFor.model.js';
+import type { UserDocument } from '../models/User.model.js';
+import type { ListingInput } from '../utils/listingInput.js';
 
-export const createSearchedForListing = async (listing) => {
-    return await SearchingFor.create(listing);
-}
+export const createSearchedForListing = (listing: ListingInput) => SearchingFor.create(listing);
 
-export const getAllSearchedForListings = async () => {
-    return await SearchingFor.find({});
-}
+export const getAllSearchedForListings = () => SearchingFor.find().sort({ createdAt: -1 });
 
-export const getSingleSearchedForListing = async (id) => {
-    return await SearchingFor.findById(id);
-}
+export const getSingleSearchedForListing = (id: string) =>
+    SearchingFor.findById(id).populate<{ userRef: UserDocument | null }>('userRef');
 
-export const updateSearchedForListing = async (id, data) => {
-    return await SearchingFor.findByIdAndUpdate(id, data, {new: true});
-}
+export const updateSearchedForListing = (id: string, data: ListingInput) =>
+    SearchingFor.findByIdAndUpdate(id, data, { new: true, runValidators: true });
 
-export const deleteSearchForListing = async (id) => {
-    await SearchingFor.findByIdAndDelete(id);
-}
+export const deleteSearchForListing = (id: string) => SearchingFor.findByIdAndDelete(id);

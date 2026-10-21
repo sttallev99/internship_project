@@ -1,22 +1,21 @@
-import jwt from 'jsonwebtoken';
+import type { RequestHandler } from 'express';
 
-export const isAuth = (req, res, next) => {
-    const token = req.cookies.access_token;
-    
-    if(!token) {
-        return res.status(401).json({
-            message: 'Unauthorized'
-        })
+import { verifyAccessToken } from '../services/auth.services.js';
+import AppError from '../utils/AppError.js';
+
+export const ACCESS_TOKEN_COOKIE = 'access_token';
+
+export const isAuth: RequestHandler = (req, _res, next) => {
+    const token: unknown = req.cookies?.[ACCESS_TOKEN_COOKIE];
+
+    if (typeof token !== 'string' || token === '') {
+        return next(new AppError('Unauthorized', 401));
     }
 
-    jwt.verify(token, process.env.SECRET_KEY, (err, userData) => {
-        if(err) {
-            return res.status(403).json({
-                message: "Forbidden"
-            });
-        }
-        req.userId = userData.userId;
+    try {
+        req.userId = verifyAccessToken(token).userId;
         next();
-    });
-
-}
+    } catch {
+        next(new AppError('Forbidden', 403));
+    }
+};

@@ -1,59 +1,30 @@
-import mongoose from "mongoose";
+import { Schema, model, type HydratedDocument, type InferSchemaType } from 'mongoose';
 
-const rentingOutSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    content: {
-        type: String,
-        required: true
-    },
-    country: {
-        type: String,
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    address: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    newPrice: {
-        type: Number,
-    },
-    bedrooms: {
-        type: Number,
-        required: true
-    },
-    bathrooms: {
-        type: Number,
-        required: true
-    },
-    footage: {
-        type: String,
-        required: true
-    },
-    propertyType: {
-        type: String,
-        enum: ['Apartment', "Container Home", "Tiny Home", "Villa Type", "Duplex Modern Houses"],
-        required: true,
-    },
-    images: {
-        type: Array
-    },
-    userRef: {
-        type: String,
-        required: true
-    },
-}, { timestamps: true });
+import { PROPERTY_TYPES, RENT_OUT_STATUSES } from '../constants/listing.js';
 
-const RentingOut = mongoose.model("RentingOut", rentingOutSchema);
-export default RentingOut
+const rentingOutSchema = new Schema(
+    {
+        title: { type: String, required: true, trim: true },
+        content: { type: String, required: true, trim: true },
+        country: { type: String, required: true, trim: true },
+        city: { type: String, required: true, trim: true },
+        address: { type: String, required: true, trim: true },
+        price: { type: Number, required: true, min: 0 },
+        newPrice: { type: Number, min: 0 },
+        bedrooms: { type: Number, required: true, min: 0 },
+        bathrooms: { type: Number, required: true, min: 0 },
+        footage: { type: String, required: true, trim: true },
+        propertyType: { type: String, enum: PROPERTY_TYPES, required: true },
+        images: { type: [String], default: [] },
+        status: { type: String, enum: RENT_OUT_STATUSES, default: 'active' },
+        userRef: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    },
+    { timestamps: true },
+);
+
+export type RentingOutAttributes = InferSchemaType<typeof rentingOutSchema>;
+export type RentingOutDocument = HydratedDocument<RentingOutAttributes>;
+
+const RentingOut = model('RentingOut', rentingOutSchema);
+
+export default RentingOut;

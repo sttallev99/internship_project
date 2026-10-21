@@ -1,83 +1,80 @@
-import { createRentingOutListing, deleteRentOutListing, getAllRentingOutListings, getSingleRentOutListing, updateRentOutListing } from "../services/rentingOut.services.js";
-import AppError from "../utils/AppError.js";
+import { MAX_PAGE_SIZE } from '../constants/listing.js';
+import {
+    changeRentOutStatus,
+    createRentingOutListing,
+    deleteRentOutListing,
+    getActiveRentingOutListings,
+    getSingleRentOutListing,
+    updateRentOutListing,
+} from '../services/rentingOut.services.js';
+import AppError from '../utils/AppError.js';
+import catchAsync from '../utils/catchAsync.js';
+import { isListingOwner, sanitizeListingInput } from '../utils/listingInput.js';
+import { parsePositiveInt } from '../utils/queryParsers.js';
 
-export const createRentOut = async (req, res) => {
-    try {
-        const rentingOutListing = await createRentingOutListing(req.body);
-        res.status(201).json({
-            success: true,
-            message: "Listing created successfully!",
-            rentingOutListing,
-        });
-    } catch(err) {
-        res.status(401).json({
-            success: false,
-            message: err.message.toString()
-        })
+const findRentOutOrThrow = async (id: string) => {
+    const listing = await getSingleRentOutListing(id);
+    if (!listing) {
+        throw new AppError('Listing not found', 404);
     }
-}
+    return listing;
+};
 
-export const getSingleRentOut = async (req, res, next) => {
-    try{
-        const rentingOut = await getSingleRentOutListing(req.params.rent_id);
+export const createRentOut = catchAsync(async (req, res) => {
+    const rentingOutListing = await createRentingOutListing({
+        ...sanitizeListingInput(req.body),
+        userRef: req.userId,
+    });
 
-        if(!rentingOut) {
-            return next(new AppError('Listing not found', 404));
-        }
-        res.status(200).json({rentingOut});
-    } catch(err) {
-        next(new AppError(err.message, 400));
+    res.status(201).json({ success: true, message: 'Listing created successfully!', rentingOutListing });
+});
+
+export const getSingleRentOut = catchAsync(async (req, res) => {
+    const rentingOut = await findRentOutOrThrow(req.params.rent_id);
+
+    res.status(200).json({ success: true, rentingOut });
+});
+
+export const getAllRentOut = catchAsync(async (req, res) => {
+    const limit = parsePositiveInt(req.query.limit, MAX_PAGE_SIZE, MAX_PAGE_SIZE);
+    const rentOuts = await getActiveRentingOutListings(limit);
+
+    res.status(200).json({ success: true, rentOuts });
+});
+
+export const updateRentOut = catchAsync(async (req, res) => {
+    const listing = await findRentOutOrThrow(req.params.rent_id);
+    if (!isListingOwner(listing.userRef, req.userId)) {
+        throw new AppError('You can only update your own listings', 403);
     }
-}
 
-export const getAllRentOut = async (req, res, next) => {
-    try {
-        const rentOuts = await getAllRentingOutListings();
-        res.status(200).json({rentOuts});
-    } catch(err) {
-        next(new AppError(err.message, 400));
+    const updatedListing = await updateRentOutListing(listing.id, sanitizeListingInput(req.body));
+
+    res.status(200).json({ success: true, message: 'Listing updated successfully', updatedListing });
+});
+
+/** A tenant asks to rent a listing; the owner then accepts or rejects it (see user.controller). */
+export const requestRent = catchAsync(async (req, res) => {
+    const listing = await findRentOutOrThrow(req.params.rent_id);
+    if (isListingOwner(listing.userRef, req.userId)) {
+        throw new AppError('You cannot rent your own listing', 400);
     }
-}
-
-export const updateRentOut = async (req, res, next) => {
-    const listingId = req.params.rent_id;
-    try {
-        const listing = await getSingleRentOutListing(listingId);
-        
-        if(!listing) {
-            return next(new AppError('Listing not found', 404));
-        }
-        if(req.userId !== listing.userRef) {
-            return next(new AppError("You can only update your own listings", 401));
-        }
-    
-        const updatedListing = await updateRentOutListing(listingId, req.body);
-        res.status(200).json({
-            message: "Listing updated successfully",
-            updatedListing
-        })
-    } catch(err) {
-        next(new AppError(err.message, 400))
+    if (listing.status !== 'active') {
+        throw new AppError('This listing is no longer available', 409);
     }
-}
 
-export const deleteRentOut = async (req, res, next) => {
-    const listingId = req.params.rent_id;
-    try {
-        const listing = await getSingleRentOutListing(listingId);
+    await changeRentOutStatus(listing.id, 'pending');
 
-        if(!listing) {
-            return next(new AppError("Listing not found", 404));
-        }
-        if(req.userId !== listing.userRef) {
-            return next(new AppError("You can only delete your own listings", 401));
-        }
-        await deleteRentOutListing(listingId);
-        res.status(200).json({
-            message: "Listing deleted successfully"
-        });
-    } catch(err) {
-        next(new AppError(err.message, 400));
+    res.status(200).json({ success: true, message: 'Rent request sent' });
+});
+
+export const deleteRentOut = catchAsync(async (req, res) => {
+    const listing = await findRentOutOrThrow(req.params.rent_id);
+    if (!isListingOwner(listing.userRef, req.userId)) {
+        throw new AppError('You can only delete your own listings', 403);
     }
-}
 
+    await deleteRentOutListing(listing.id);
+
+    res.status(200).json({ success: true, message: 'Listing deleted successfully' });
+});

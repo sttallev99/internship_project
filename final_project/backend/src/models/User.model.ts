@@ -1,62 +1,47 @@
-import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import { Schema, model, type HydratedDocument, type InferSchemaType } from 'mongoose';
+import bcrypt from 'bcrypt';
 
-const userSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        required: true
-    },
-    lastName: {
-        type: String,
-        required: true
-    },
-    nickname: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        validate: {
-            validator: function(v) {
-                return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
+const SALT_ROUNDS = 10;
+const EMAIL_PATTERN = /^[\w.-]+@([\w-]+\.)+[\w-]{2,}$/;
+const DEFAULT_PROFILE_PICTURE =
+    'https://static.vecteezy.com/system/resources/previews/001/840/612/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg';
+
+const userSchema = new Schema(
+    {
+        firstName: { type: String, required: true, trim: true },
+        lastName: { type: String, required: true, trim: true },
+        nickname: { type: String, required: true, unique: true, trim: true },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+            validate: {
+                validator: (value: string) => EMAIL_PATTERN.test(value),
+                message: (props: { value: string }) => `${props.value} is not a valid email!`,
             },
-            message: props => `${props.value} is not a valid Email!`
-        }
+        },
+        phoneNumber: { type: String, required: true, unique: true, trim: true },
+        // Excluded from queries by default; request it explicitly with `.select('+password')`.
+        password: { type: String, required: true, select: false },
+        profilePicture: { type: String, default: DEFAULT_PROFILE_PICTURE },
     },
-    phoneNumber: {
-        type: String,
-        required: true,
-        unique: true
+    {
+        toJSON: {
+            // Never leak the password hash, even when the field was selected.
+            transform: (_doc, { password: _password, ...user }) => user,
+        },
     },
-    password: {
-        type: String,
-        required: true
-    },
-    profilePicture: {
-        type: String,
-        default: 'https://static.vecteezy.com/system/resources/previews/001/840/612/non_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg'
-    },
+);
+
+userSchema.pre('save', async function hashPassword() {
+    if (!this.isModified('password')) return;
+    this.password = await bcrypt.hash(this.password, SALT_ROUNDS);
 });
 
-userSchema.pre('save', function(next) {
-    const user = this;
+export type UserAttributes = InferSchemaType<typeof userSchema>;
+export type UserDocument = HydratedDocument<UserAttributes>;
 
-    if(!user.isModified("password")) return next();
+const User = model('User', userSchema);
 
-    bcrypt.genSalt(10, (err, salt) => {
-        if(err) return next(err);
-
-        bcrypt.hash(user.password, salt, (err, hash) => {
-            if(err) return next(err);
-
-            user.password = hash;
-            next();
-        })
-    })
-})
-
-const User = mongoose.model('User', userSchema);
 export default User;

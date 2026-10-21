@@ -1,13 +1,13 @@
-import { Router } from "express";
-import rentOutListingRouter from './rentOut.router.js';
-import searchForListingRouter from './searchedFor.router.js'
-import { getAllListings } from "../controllers/listing.controller.js";
+import { Router } from 'express';
+
+import { getAllListings } from '../controllers/listing.controller.js';
+import rentOutRouter from './rentOut.router.js';
+import searchedForRouter from './searchedFor.router.js';
 
 const router = Router();
 
-router.use('/rent-out', rentOutListingRouter);
-router.use('/search-for', searchForListingRouter)
-
 router.get('/', getAllListings);
+router.use('/rent-out', rentOutRouter);
+router.use('/search-for', searchedForRouter);
 
 export default router;

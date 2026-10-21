@@ -1,83 +1,61 @@
-import { createSearchedForListing, deleteSearchForListing, getAllSearchedForListings, getSingleSearchedForListing, updateSearchedForListing } from "../services/searchedFor.services.js";
-import AppError from "../utils/AppError.js";
+import {
+    createSearchedForListing,
+    deleteSearchForListing,
+    getAllSearchedForListings,
+    getSingleSearchedForListing,
+    updateSearchedForListing,
+} from '../services/searchedFor.services.js';
+import AppError from '../utils/AppError.js';
+import catchAsync from '../utils/catchAsync.js';
+import { isListingOwner, sanitizeListingInput } from '../utils/listingInput.js';
 
-export const createSearchFor = async (req, res) => {
-    try {
-        const searchingForListing = await createSearchedForListing(req.body);
-        res.status(201).json({
-            success: true,
-            message: "Listing created successfully!",
-            searchingForListing
-        })
-    } catch(err) {
-        res.status(401).json({
-            success: false,
-            message: err.message.toString()
-        })
+const findSearchForOrThrow = async (id: string) => {
+    const listing = await getSingleSearchedForListing(id);
+    if (!listing) {
+        throw new AppError('Listing not found', 404);
     }
-}
+    return listing;
+};
 
-export const getSingleSearchedFor = async (req, res, next) => {
-    try {
-        const searchedForListing = await getSingleSearchedForListing(req.params.search_for_id);
+export const createSearchFor = catchAsync(async (req, res) => {
+    const searchingForListing = await createSearchedForListing({
+        ...sanitizeListingInput(req.body),
+        userRef: req.userId,
+    });
 
-        if(!searchedForListing) {
-            throw new AppError('Listing not found', 404);
-        }
-        res.status(200).json({searchedForListing});
-    } catch(err) {
-        next(err);
+    res.status(201).json({ success: true, message: 'Listing created successfully!', searchingForListing });
+});
+
+export const getSingleSearchedFor = catchAsync(async (req, res) => {
+    const searchedForListing = await findSearchForOrThrow(req.params.search_for_id);
+
+    res.status(200).json({ success: true, searchedForListing });
+});
+
+export const getAllSearchedFor = catchAsync(async (_req, res) => {
+    const searchedForListings = await getAllSearchedForListings();
+
+    res.status(200).json({ success: true, searchedForListings });
+});
+
+export const updateSearchFor = catchAsync(async (req, res) => {
+    const listing = await findSearchForOrThrow(req.params.search_for_id);
+    if (!isListingOwner(listing.userRef, req.userId)) {
+        throw new AppError('You can only update your own listings', 403);
     }
-}
 
-export const getAllSearchedFor = async (req, res, next) => {
-    try {
-        const searchedForListings = await getAllSearchedForListings();
-        res.status(200).json({searchedForListings})
-    } catch(err) {
-        next(new AppError(err.message, 400));
+    const updatedListing = await updateSearchedForListing(listing.id, sanitizeListingInput(req.body));
+
+    res.status(200).json({ success: true, message: 'Listing updated successfully', updatedListing });
+});
+
+export const deleteSearchFor = catchAsync(async (req, res) => {
+    const listing = await findSearchForOrThrow(req.params.search_for_id);
+    if (!isListingOwner(listing.userRef, req.userId)) {
+        throw new AppError('You can only delete your own listings', 403);
     }
 
-}
+    await deleteSearchForListing(listing.id);
 
-export const updateSearchFor = async (req, res, next) => {
-    const listingId = req.params.search_for_id;
-    try {
-        const listing = await getSingleSearchedForListing(listingId);
-
-        if(!listing) {
-            return next(new AppError("Listing not found", 404))
-        }
-        if(req.userId !== listing.userRef) {
-            console.log(req.userId)
-            return next(new AppError("You can only update your own listings", 401));
-        }
-        const updatedListing = await updateSearchedForListing(listing, req.body);
-        res.status(200).json({
-            message: 'Listing updated successfully',
-            updatedListing
-        });
-    } catch(err) {
-        next(new AppError(err.message, 400))
-    }
-}
-
-export const deleteSearchFor = async (req, res, next) => {
-    const listingId = req.params.search_for_id;
-    try {
-        const listing = await getSingleSearchedForListing(listingId);
-
-        if(!listing) {
-            return next(new AppError('Listing not found', 404));
-        }
-        if(req.userId !== listing.userRef) {
-            return next(new AppError('You can only delete your own listings', 401));
-        }
-        await deleteSearchForListing(listingId);
-        res.status(300).json({
-            message: "Listing deleted successfully"
-        });
-    } catch(err) {
-        next(new AppError(err.message, 400));
-    }
-}
+    res.status(200).json({ success: true, message: 'Listing deleted successfully' });
+});
