@@ -1,4 +1,6 @@
-export const baseUrl = process.env.REACT_APP_API_URL ?? 'http://localhost:5000';
+// In production the API is served from the same origin as the app; in development it runs on :5000.
+export const baseUrl =
+    process.env.REACT_APP_API_URL ?? (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000');
 
 export const PAGE_SIZE = 5;
 export const TRENDING_LISTINGS_COUNT = 6;

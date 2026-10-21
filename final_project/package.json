@@ -1,0 +1,12 @@
+{
+  "name": "real-estate-listings",
+  "private": true,
+  "description": "Builds and runs the API and the React app as a single service (used for deployment)",
+  "scripts": {
+    "build": "npm ci --prefix backend --include=dev && npm run build --prefix backend && npm ci --prefix frontend --include=dev && npm run build --prefix frontend",
+    "start": "npm start --prefix backend"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
