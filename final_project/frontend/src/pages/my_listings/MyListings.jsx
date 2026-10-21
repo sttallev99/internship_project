@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { BsChatDots, BsThreeDotsVertical } from 'react-icons/bs';
+import { BsChatDots, BsThreeDotsVertical } from '../../components/icons';
 import classNames from 'classnames';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';

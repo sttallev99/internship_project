@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaHome } from "react-icons/fa";
+import { FaHome } from '../icons';
 
 import './style.scss';
 

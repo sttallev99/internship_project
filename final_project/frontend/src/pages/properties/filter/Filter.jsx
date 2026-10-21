@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch } from '../../../components/icons';
 
 import './style.scss';
 import { LISTING_TYPE_FILTER, PRICE_RANGE, PROPERTY_TYPES } from '../../../constants';

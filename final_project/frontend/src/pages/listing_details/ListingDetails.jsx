@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { SlCalender } from 'react-icons/sl';
-import { FaEye, FaFacebook, FaInstagram, FaPinterestP, FaTwitter } from 'react-icons/fa';
-import { FaHeart } from 'react-icons/fa6';
-import { MdLocationOn } from 'react-icons/md';
-import { PiStarThin } from 'react-icons/pi';
+import { SlCalender } from '../../components/icons';
+import { FaEye, FaFacebook, FaInstagram, FaPinterestP, FaTwitter } from '../../components/icons';
+import { FaHeart } from '../../components/icons';
+import { MdLocationOn } from '../../components/icons';
+import { PiStarThin } from '../../components/icons';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';

@@ -1,9 +1,9 @@
 import React from 'react';
-import { FaHeart } from 'react-icons/fa6';
-import { IoBedOutline } from 'react-icons/io5';
-import { PiBathtub } from 'react-icons/pi';
-import { TbRulerMeasure2 } from 'react-icons/tb';
-import { MdLocationOn } from 'react-icons/md';
+import { FaHeart } from '../icons';
+import { IoBedOutline } from '../icons';
+import { PiBathtub } from '../icons';
+import { TbRulerMeasure2 } from '../icons';
+import { MdLocationOn } from '../icons';
 import { Link, useLocation } from 'react-router-dom';
 
 import './style.scss';

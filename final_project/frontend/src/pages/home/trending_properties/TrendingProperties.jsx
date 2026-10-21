@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaPlusCircle } from 'react-icons/fa';
+import { FaPlusCircle } from '../../../components/icons';
 import { Link } from 'react-router-dom';
 
 import './style.scss';

@@ -1,6 +1,6 @@
 import React from 'react';
-import { MdOutlineCameraAlt } from 'react-icons/md';
-import { FaFacebook, FaInstagram, FaPinterestP, FaTwitter } from 'react-icons/fa';
+import { MdOutlineCameraAlt } from '../../components/icons';
+import { FaFacebook, FaInstagram, FaPinterestP, FaTwitter } from '../../components/icons';
 import { useSelector } from 'react-redux';
 
 import './style.scss';

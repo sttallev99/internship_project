@@ -1,5 +1,5 @@
 import React from 'react';
-import { IoIosSearch } from 'react-icons/io';
+import { IoIosSearch } from '../../components/icons';
 import { Link, useNavigate } from 'react-router-dom';
 
 import './style.scss';

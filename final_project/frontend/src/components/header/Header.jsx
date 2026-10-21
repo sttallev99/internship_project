@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { HiPlusCircle } from "react-icons/hi";
-import { BsPersonAdd } from "react-icons/bs";
+import { HiPlusCircle } from '../icons';
+import { BsPersonAdd } from '../icons';
 
 import logo from '../../assets/nav-logo.png'
 import './style.scss'

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BiSort } from 'react-icons/bi';
+import { BiSort } from '../../components/icons';
 import { toast } from 'react-toastify';
 
 import './style.scss';

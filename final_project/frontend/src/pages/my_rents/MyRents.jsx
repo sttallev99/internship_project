@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BsChatDots } from 'react-icons/bs';
+import { BsChatDots } from '../../components/icons';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 

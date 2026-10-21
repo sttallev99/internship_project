@@ -1,8 +1,8 @@
 import React from 'react';
-import { GoPlusCircle } from 'react-icons/go';
-import { SlLogout } from 'react-icons/sl';
-import { LuMessagesSquare } from 'react-icons/lu';
-import { TbHeartCheck, TbKey } from 'react-icons/tb';
+import { GoPlusCircle } from '../icons';
+import { SlLogout } from '../icons';
+import { LuMessagesSquare } from '../icons';
+import { TbHeartCheck, TbKey } from '../icons';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
