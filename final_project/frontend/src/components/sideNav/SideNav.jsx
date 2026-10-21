@@ -1,6 +1,7 @@
 import React from 'react';
 import { GoPlusCircle } from 'react-icons/go';
 import { SlLogout } from 'react-icons/sl';
+import { LuMessagesSquare } from 'react-icons/lu';
 import { TbHeartCheck, TbKey } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { toast } from 'react-toastify';
 import './style.scss';
 import { signOut } from '../../api/auth';
 import { removeUser } from '../../features/userSlice';
+import { disconnectSocket } from '../../realtime/socket';
 
 const SideNav = () => {
     const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const SideNav = () => {
         } catch {
             // The session is cleared locally either way; the cookie simply expires on its own.
         }
+        disconnectSocket();
         dispatch(removeUser());
         toast.info('You have been logged out');
         navigate('/');
@@ -45,6 +48,12 @@ const SideNav = () => {
                     <Link to='/profile/my-rents' className="sidebar__menu--link">
                         <TbKey className='sidebar__menu--icon'/>
                         <span className="sidebar__menu--text">My Rents</span>
+                    </Link>
+                </li>
+                <li className="sidebar__menu--items">
+                    <Link to='/profile/messages' className="sidebar__menu--link">
+                        <LuMessagesSquare className='sidebar__menu--icon'/>
+                        <span className="sidebar__menu--text">Messages</span>
                     </Link>
                 </li>
                 <li className="sidebar__menu--items">

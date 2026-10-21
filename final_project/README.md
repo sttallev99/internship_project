@@ -68,5 +68,14 @@ src/
 | GET | `/user/my-rents` | ✓ | Listings the current user requested to rent or is renting (paginated) |
 | PUT | `/user/change-status/:id` | ✓ (owner) | Accept or reject a pending rent request |
 | POST | `/images` | ✓ | Upload a listing image (JPG/PNG, max 5 MB) to S3 |
+| GET, POST | `/conversations` | ✓ | List my conversations / owner starts (or reopens) the chat with a listing's tenant |
+| GET | `/conversations/:id` | ✓ (participant) | A conversation with its message history |
+| POST | `/conversations/:id/messages` | ✓ (participant) | Send a message (pushed live to the other participant) |
+
+### Live chat
+
+Chat messages are written through the REST API and pushed to participants with **Socket.IO**, which shares the API's
+port and authenticates with the same `access_token` cookie. Clients join a conversation room with
+`conversation:join` and receive `message:new` and `listing:status` (when the owner approves or rejects the rent request).
 
 Errors share one shape: `{ "success": false, "status": "fail" | "error", "message": "..." }`.

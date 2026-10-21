@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { BsChatDots } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 // Shares the dashboard table layout with "My Listings".
 import '../my_listings/style.scss';
+import '../../components/action_button/style.scss';
 import { getErrorMessage } from '../../api/client';
 import { getMyRents } from '../../api/user';
 import Footer from '../../components/footer/Footer';
@@ -42,6 +44,15 @@ const RentRow = ({ listing }) => (
         </td>
         <td>
             <span className="status">{RENT_STATUS_LABEL[listing.status] ?? listing.status}</span>
+        </td>
+        <td>
+            {listing.conversationId ? (
+                <Link to={`/profile/messages/${listing.conversationId}`} className="action__btn action__btn--outline">
+                    <BsChatDots /> Chat with owner
+                </Link>
+            ) : (
+                <span className="reviews__date">The owner will message you here</span>
+            )}
         </td>
     </tr>
 );
@@ -82,6 +93,7 @@ const MyRents = () => {
                                         <th>Property</th>
                                         <th>Last updated</th>
                                         <th>Status</th>
+                                        <th>Chat</th>
                                     </tr>
                                 </thead>
                                 <tbody>

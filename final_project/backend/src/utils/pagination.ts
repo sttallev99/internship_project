@@ -18,10 +18,15 @@ export interface PaginationFacet<T> {
     data: T[];
 }
 
-export const paginationStage = (page: number, limit: number): PipelineStage.Facet => ({
+/** `pageStages` run only on the documents of the requested page (e.g. lookups). */
+export const paginationStage = (
+    page: number,
+    limit: number,
+    pageStages: PipelineStage.FacetPipelineStage[] = [],
+): PipelineStage.Facet => ({
     $facet: {
         metaData: [{ $count: 'totalDocuments' }],
-        data: [{ $skip: (page - 1) * limit }, { $limit: limit }],
+        data: [{ $skip: (page - 1) * limit }, { $limit: limit }, ...pageStages],
     },
 });
 

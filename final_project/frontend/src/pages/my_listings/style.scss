@@ -61,6 +61,25 @@
                         background-color: lightgray;
                         padding: .5rem 1rem;
                         border-radius: 1rem;
+                        text-transform: capitalize;
+                    }
+
+                    .rent__request {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: .5rem;
+
+                        &--tenant {
+                            font-size: .9rem;
+                            color: gray;
+                        }
+
+                        &--actions {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: .5rem;
+                        }
                     }
 
                     .reviews__action--wrapper {

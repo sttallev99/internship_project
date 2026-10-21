@@ -9,6 +9,7 @@ import ListingDetails from './pages/listing_details/ListingDetails';
 import ListingForm from './pages/listing_form/ListingForm';
 import MyListings from './pages/my_listings/MyListings';
 import MyRents from './pages/my_rents/MyRents';
+import Messages from './pages/messages/Messages';
 import Profile from './pages/profile/Profile';
 import Properties from './pages/properties/Properties';
 import Register from './pages/register/Register';
@@ -27,6 +28,8 @@ function App() {
                         <Route path='/profile' element={<Profile />} />
                         <Route path='/profile/own-listings' element={<MyListings />} />
                         <Route path='/profile/my-rents' element={<MyRents />} />
+                        <Route path='/profile/messages' element={<Messages />} />
+                        <Route path='/profile/messages/:conversation_id' element={<Messages />} />
                         <Route path='/profile/create-listing' element={<ListingForm />} />
                         <Route path='/profile/edit-listing/:listing_id' element={<ListingForm />} />
                     </Route>

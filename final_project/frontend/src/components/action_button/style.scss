@@ -1,0 +1,39 @@
+.action__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .5rem 1rem;
+    border-radius: .5rem;
+    border: 1px solid transparent;
+    font: inherit;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity .2s;
+
+    &:hover {
+        opacity: .85;
+    }
+
+    &:disabled {
+        opacity: .5;
+        cursor: not-allowed;
+    }
+
+    &--primary {
+        background-color: #FA4A4A;
+        color: white;
+    }
+
+    &--success {
+        background-color: #16a34a;
+        color: white;
+    }
+
+    &--outline {
+        background-color: white;
+        border-color: lightgray;
+        color: #333;
+    }
+}

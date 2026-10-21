@@ -1,6 +1,8 @@
 import type { Request } from 'express';
 
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../constants/listing.js';
+import { emitListingStatus } from '../realtime/socket.js';
+import { getConversationIdsForListing } from '../services/chat.services.js';
 import { getSingleRentOutListing, resolveRentRequest } from '../services/rentingOut.services.js';
 import { getOwnListings, getRentedListings } from '../services/user.services.js';
 import AppError from '../utils/AppError.js';
@@ -49,7 +51,12 @@ export const changeRentStatus = catchAsync(async (req, res) => {
         throw new AppError('This listing has no pending rent request', 409);
     }
 
-    await resolveRentRequest(listing.id, decision === 'accept');
+    const updatedListing = await resolveRentRequest(listing.id, decision === 'accept');
+
+    // Let an open chat about this listing reflect the decision immediately.
+    if (updatedListing) {
+        emitListingStatus(await getConversationIdsForListing(listing.id), listing.id, updatedListing.status);
+    }
 
     res.status(200).json({ success: true, message: 'Listing status changed' });
 });

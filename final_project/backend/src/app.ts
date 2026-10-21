@@ -5,6 +5,7 @@ import express from 'express';
 import { env } from './config/env.js';
 import globalErrorHandler from './middlewares/globalErrorHandler.js';
 import authRouter from './routes/auth.router.js';
+import chatRouter from './routes/chat.router.js';
 import imageRouter from './routes/image.router.js';
 import listingRouter from './routes/listing.router.js';
 import userRouter from './routes/user.router.js';
@@ -20,6 +21,7 @@ app.use(authRouter);
 app.use('/user', userRouter);
 app.use('/listing', listingRouter);
 app.use('/images', imageRouter);
+app.use('/conversations', chatRouter);
 
 app.all('*', (req, _res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

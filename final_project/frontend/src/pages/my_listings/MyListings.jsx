@@ -1,13 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { BsThreeDotsVertical } from 'react-icons/bs';
+import { BsChatDots, BsThreeDotsVertical } from 'react-icons/bs';
 import classNames from 'classnames';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import './style.scss';
+import { startConversation } from '../../api/chat';
 import { getErrorMessage } from '../../api/client';
 import { deleteListing } from '../../api/listings';
 import { decideRentRequest, getOwnListings } from '../../api/user';
+import ActionButton from '../../components/action_button/ActionButton';
 import Footer from '../../components/footer/Footer';
 import Header from '../../components/header/Header';
 import Pagination from '../../components/pagination/Pagination';
@@ -16,23 +18,38 @@ import SideNav from '../../components/sideNav/SideNav';
 import { PAGE_SIZE } from '../../constants';
 import { formatDate, formatLocation, getListingEditPath, getListingKind, isSearchedFor } from '../../utils/listing';
 
-const ListingStatus = ({ listing, onDecision }) => {
+/** Status of a rent-out listing, plus who asked to rent it and what the owner can do about it. */
+const ListingStatus = ({ listing, onDecision, onChat }) => {
     if (isSearchedFor(listing)) return null;
 
-    if (listing.status !== 'pending') {
-        return <span className="status">{listing.status}</span>;
-    }
+    const { tenant, status } = listing;
 
     return (
-        <select name="rentStatus" defaultValue="" onChange={(e) => onDecision(listing, e.target.value)}>
-            <option value="" disabled>Change status</option>
-            <option value="accept">Accept</option>
-            <option value="reject">Reject</option>
-        </select>
+        <div className="rent__request">
+            <span className="status">{status}</span>
+            {tenant && (
+                <>
+                    <span className="rent__request--tenant">
+                        {status === 'pending' ? 'Requested by' : 'Rented by'} {tenant.firstName} {tenant.lastName}
+                    </span>
+                    <div className="rent__request--actions">
+                        <ActionButton variant="outline" onClick={() => onChat(listing)}>
+                            <BsChatDots /> Chat
+                        </ActionButton>
+                        {status === 'pending' && (
+                            <>
+                                <ActionButton variant="success" onClick={() => onDecision(listing, 'accept')}>Approve</ActionButton>
+                                <ActionButton variant="outline" onClick={() => onDecision(listing, 'reject')}>Reject</ActionButton>
+                            </>
+                        )}
+                    </div>
+                </>
+            )}
+        </div>
     );
 };
 
-const ListingRow = ({ listing, onDelete, onDecision }) => {
+const ListingRow = ({ listing, onDelete, onDecision, onChat }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleDelete = () => {
@@ -60,7 +77,7 @@ const ListingRow = ({ listing, onDelete, onDecision }) => {
                 <span className="reviews__date">{formatDate(listing.createdAt)}</span>
             </td>
             <td>
-                <ListingStatus listing={listing} onDecision={onDecision} />
+                <ListingStatus listing={listing} onDecision={onDecision} onChat={onChat} />
             </td>
             <td>
                 <span className="properties__views">1210</span>
@@ -90,6 +107,7 @@ const ListingRow = ({ listing, onDelete, onDecision }) => {
 };
 
 const MyListings = () => {
+    const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const [listings, setListings] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
@@ -126,10 +144,19 @@ const MyListings = () => {
     const handleDecision = async (listing, decision) => {
         try {
             await decideRentRequest(listing._id, decision);
-            toast.success(decision === 'accept' ? 'Rent request accepted' : 'Rent request rejected');
+            toast.success(decision === 'accept' ? 'Renting approved' : 'Rent request rejected');
             fetchListings();
         } catch (error) {
             toast.error(getErrorMessage(error));
+        }
+    };
+
+    const handleChat = async (listing) => {
+        try {
+            const conversationId = await startConversation(listing._id);
+            navigate(`/profile/messages/${conversationId}`);
+        } catch (error) {
+            toast.error(getErrorMessage(error, 'Could not open the chat'));
         }
     };
 
@@ -159,6 +186,7 @@ const MyListings = () => {
                                             listing={listing}
                                             onDelete={handleDelete}
                                             onDecision={handleDecision}
+                                            onChat={handleChat}
                                         />
                                     ))}
                                 </tbody>
