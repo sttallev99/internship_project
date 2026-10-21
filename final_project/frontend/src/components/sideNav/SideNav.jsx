@@ -1,23 +1,31 @@
-import React from 'react'
-import { GoPlusCircle } from "react-icons/go";
-import { LuMessagesSquare } from "react-icons/lu";
-import { TbHeartCheck } from "react-icons/tb";
-import { SlLogout } from "react-icons/sl";
-
-import './style.scss'
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { GoPlusCircle } from 'react-icons/go';
+import { SlLogout } from 'react-icons/sl';
+import { TbHeartCheck } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
+import './style.scss';
+import { signOut } from '../../api/auth';
 import { removeUser } from '../../features/userSlice';
-import axios from 'axios';
-import { baseUrl } from '../../constants';
 
 const SideNav = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const handleLogout = async() => {
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+            await signOut();
+        } catch {
+            // The session is cleared locally either way; the cookie simply expires on its own.
+        }
         dispatch(removeUser());
-        await axios.get(`${baseUrl}/sign-out`);
-    }
+        toast.info('You have been logged out');
+        navigate('/');
+    };
+
     return (
         <div className='dashboard__sidebar--inner'>
             <ul className="sidebar__menu">
@@ -26,12 +34,6 @@ const SideNav = () => {
                         <GoPlusCircle className='sidebar__menu--icon'/>
                         <span className="sidebar__menu--text">Create Listing</span>
                     </Link>
-                </li>
-                <li className="sidebar__menu--items">
-                    <a href="#" className="sidebar__menu--link">
-                        <LuMessagesSquare className='sidebar__menu--icon'/>
-                        <span className="sidebar__menu--text">Message</span>
-                    </a>
                 </li>
                 <li className="sidebar__menu--items">
                     <Link to='/profile/own-listings' className="sidebar__menu--link">

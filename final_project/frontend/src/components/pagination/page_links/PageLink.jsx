@@ -11,7 +11,7 @@ const PageLink = ({className, children, disabled, active, ...props}) => {
     }
     
     return (
-        <Link {...props} className={customClassName} area-current={active ? 'page' : undefined}>
+        <Link {...props} className={customClassName} aria-current={active ? 'page' : undefined}>
             {children}
         </Link>
     )

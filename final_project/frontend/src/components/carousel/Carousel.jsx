@@ -1,51 +1,53 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import classNames from 'classnames';
 
 import './style.scss';
 
-const Carousel = ({images, sliderPosition, paginationPosition}) => {
-    const [current, setCurrent] = useState(0);
-    const [autoPlay, setAutoPlay] = useState(null);
+const AUTOPLAY_INTERVAL_MS = 3000;
 
+/** `images` may be plain URLs or `{ image }` objects (local assets). */
+const getImageSrc = (image) => (typeof image === 'string' ? image : image.image);
+
+const Carousel = ({ images, sliderPosition, paginationPosition }) => {
+    const [current, setCurrent] = useState(0);
 
     useEffect(() => {
-        setTimeout(() => {
-            slideRight()
-        }, 3000)
-    });
+        if (images.length < 2) return undefined;
 
-    const slideRight = () => {
-        setCurrent(current === images.length - 1 ? 0 : current + 1);
-    }
-    const 
-    sliderPositionProp = sliderPosition.position
-    const sliderPositionVal = sliderPosition.pixels
+        const timer = setInterval(() => {
+            setCurrent((index) => (index + 1) % images.length);
+        }, AUTOPLAY_INTERVAL_MS);
+
+        return () => clearInterval(timer);
+    }, [images.length]);
+
     return (
-        <div 
-            className={sliderPosition.hasOwnProperty('fullWidth') ? 'carousel__full_w' : 'carousel'} 
-            style={{[sliderPositionProp]: sliderPositionVal + 'px'}}
+        <div
+            className={sliderPosition.fullWidth ? 'carousel__full_w' : 'carousel'}
+            style={{ [sliderPosition.position]: `${sliderPosition.pixels}px` }}
         >
             <div className="carousel__wrapper">
-                {images.map((image, index) => {
-                    return(
-                        <div key={index} className={index == current ? 'carousel__card carousel__card--active' : 'carousel__card'}>
-                            <img src={image.image} alt="" className='card__img'/>
-                            <div className="card__overlay">
-                            </div>
-                        </div>
-                    )
-                })}
-                <div className={"carousel__pagination__" + paginationPosition.position}>
+                {images.map((image, index) => (
+                    <div
+                        key={index}
+                        className={classNames('carousel__card', { 'carousel__card--active': index === current })}
+                    >
+                        <img src={getImageSrc(image)} alt="" className='card__img' />
+                        <div className="card__overlay"></div>
+                    </div>
+                ))}
+                <div className={`carousel__pagination__${paginationPosition.position}`}>
                     {images.map((_, index) => (
-                        <div 
+                        <div
                             key={index}
-                            className={index == current ? 'pagination__dot pagination__dot--active' : 'pagination__dot'}
+                            className={classNames('pagination__dot', { 'pagination__dot--active': index === current })}
                             onClick={() => setCurrent(index)}
                         ></div>
                     ))}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Carousel
+export default Carousel;

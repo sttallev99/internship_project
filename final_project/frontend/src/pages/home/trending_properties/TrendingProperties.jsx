@@ -1,12 +1,22 @@
-import React from 'react'
-import { FaPlusCircle } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
+import { FaPlusCircle } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
-
-import Heading from '../../../components/heading/Heading'
 import './style.scss';
+import { getTrendingListings } from '../../../api/listings';
+import Heading from '../../../components/heading/Heading';
 import PropertyCard from '../../../components/property_card/PropertyCard';
+import { TRENDING_LISTINGS_COUNT } from '../../../constants';
 
 const TrendingProperties = () => {
+    const [listings, setListings] = useState([]);
+
+    useEffect(() => {
+        getTrendingListings(TRENDING_LISTINGS_COUNT)
+            .then(setListings)
+            .catch(() => setListings([]));
+    }, []);
+
     return (
         <section className='featred__list'>
             <div className='container'>
@@ -16,23 +26,18 @@ const TrendingProperties = () => {
                 </div>
                 <div className="featured__inner">
                     <div className='featured__inner--content'>
-                        <PropertyCard />
-                        <PropertyCard />
-                        <PropertyCard />
-                        <PropertyCard />
-                        <PropertyCard />
-                        <PropertyCard />
+                        {listings.map((listing) => <PropertyCard data={listing} key={listing._id} />)}
                     </div>
                     <div className="featured__properties--footer">
-                        <a className='solid_btn' href="#">
+                        <Link className='solid_btn' to='/listings'>
                             <span>More Properties</span>
                             <FaPlusCircle />
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default TrendingProperties
+export default TrendingProperties;

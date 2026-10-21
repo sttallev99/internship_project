@@ -1,17 +1,29 @@
-import React from 'react'
-import { MdOutlineCameraAlt } from "react-icons/md";
-import { FaFacebook } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
-import { FaPinterestP } from "react-icons/fa";
+import React from 'react';
+import { MdOutlineCameraAlt } from 'react-icons/md';
+import { FaFacebook, FaInstagram, FaPinterestP, FaTwitter } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 import './style.scss';
-import Header from '../../components/header/Header';
 import Footer from '../../components/footer/Footer';
-import SideNav from '../../components/sideNav/SideNav';
+import Header from '../../components/header/Header';
 import ProfileHeading from '../../components/profile_heading/ProfileHeading';
+import SideNav from '../../components/sideNav/SideNav';
+
+const PROFILE_BACKGROUND_IMG =
+    'https://risingtheme.com/html/demo-newvilla/newvilla/admin/assets/img/dashboard/profile-sticky-thumbpng.png';
+const SOCIAL_ICONS = [FaFacebook, FaInstagram, FaTwitter, FaPinterestP];
+
+const ProfileInfo = ({ title, value }) => (
+    <li className="profile__info--list">
+        <h3 className="profile__info--title">{title}</h3>
+        <span className="profile__info--text">{value}</span>
+    </li>
+);
 
 const Profile = () => {
+    const { user } = useSelector((state) => state.user);
+    const fullName = `${user.firstName} ${user.lastName}`;
+
     return (
         <>
             <Header />
@@ -21,41 +33,29 @@ const Profile = () => {
                     <ProfileHeading />
                     <div className="dashboard__profile--wrapper">
                         <div className="profile__backgroung--thumbnail">
-                            <img src="https://risingtheme.com/html/demo-newvilla/newvilla/admin/assets/img/dashboard/profile-sticky-thumbpng.png" alt="background_profile_img" />
-                            <a href="" className="profile__edit--btn">
+                            <img src={PROFILE_BACKGROUND_IMG} alt="" />
+                            <button type='button' className="profile__edit--btn">
                                 <MdOutlineCameraAlt />
                                 <span>Edit</span>
-                            </a>
+                            </button>
                         </div>
                         <div className="profile__main--content">
                             <div className="profile__author">
                                 <div className="profile__author--thumbnail">
-                                    <img src="https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://fdczvxmwwjwpwbeeqcth.supabase.co/storage/v1/object/public/images/50dab922-5d48-4c6b-8725-7fd0755d9334/3a3f2d35-8167-4708-9ef0-bdaa980989f9.png" alt="profile__picture" />
+                                    <img src={user.profilePicture} alt={fullName} />
                                 </div>
                                 <div className="profile__author--content">
-                                    <h3 className="profile__author--title">Georgi Stalev</h3>
+                                    <h3 className="profile__author--title">{fullName}</h3>
                                 </div>
                             </div>
                             <div className="profile__info">
                                 <ul className="profile__info--wrapper">
-                                    <li className="profile__info--list">
-                                        <h3 className="profile__info--title">EMAIL</h3>
-                                        <a href="" className="profile__info--text">Example@gmail.com</a>
-                                    </li>
-                                    <li className="profile__info--list">
-                                        <h3 className="profile__info--title">PHONE</h3>
-                                        <a href="" className="profile__info--text">: 0885825150</a>
-                                    </li>
+                                    <ProfileInfo title='EMAIL' value={user.email} />
+                                    <ProfileInfo title='PHONE' value={user.phoneNumber} />
                                 </ul>
                                 <ul className="profile__info--wrapper">
-                                    <li className="profile__info--list">
-                                        <h3 className="profile__info--title">BIRTHDAY</h3>
-                                        <a href="" className="profile__info--text">8 February</a>
-                                    </li>
-                                    <li className="profile__info--list">
-                                        <h3 className="profile__info--title">LOCATION</h3>
-                                        <a href="" className="profile__info--text">Sofia, Bulgaria</a>
-                                    </li>
+                                    <ProfileInfo title='NICKNAME' value={user.nickname} />
+                                    <ProfileInfo title='NAME' value={fullName} />
                                 </ul>
                             </div>
                         </div>
@@ -67,26 +67,11 @@ const Profile = () => {
                             <div className="social__share">
                                 <h3 className="social__share--title">Follow me on</h3>
                                 <ul className="social__share--wrapper">
-                                    <li className="social__share--list">
-                                        <a href="" className="social__share--icon">
-                                            <FaFacebook />
-                                        </a>
-                                    </li>
-                                    <li className="social__share--list">
-                                        <a href="" className="social__share--icon">
-                                            <FaInstagram />
-                                        </a>
-                                    </li>
-                                    <li className="social__share--list">
-                                        <a href="" className="social__share--icon">
-                                            <FaTwitter />
-                                        </a>
-                                    </li>
-                                    <li className="social__share--list">
-                                        <a href="" className="social__share--icon">
-                                            <FaPinterestP />
-                                        </a>
-                                    </li>
+                                    {SOCIAL_ICONS.map((Icon, index) => (
+                                        <li className="social__share--list" key={index}>
+                                            <span className="social__share--icon"><Icon /></span>
+                                        </li>
+                                    ))}
                                 </ul>
                             </div>
                         </div>
@@ -95,7 +80,7 @@ const Profile = () => {
             </section>
             <Footer />
         </>
-    )
-}
+    );
+};
 
-export default Profile
+export default Profile;

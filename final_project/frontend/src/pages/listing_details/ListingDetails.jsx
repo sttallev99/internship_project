@@ -1,36 +1,92 @@
-import React from 'react'
-import { SlCalender } from "react-icons/sl";
-import { FaEye } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa6";
-import { MdLocationOn } from "react-icons/md";
-import { PiStarThin } from "react-icons/pi";
-import { FaFacebook } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
-import { FaPinterestP } from "react-icons/fa";
+import React, { useEffect, useState } from 'react';
+import { SlCalender } from 'react-icons/sl';
+import { FaEye, FaFacebook, FaInstagram, FaPinterestP, FaTwitter } from 'react-icons/fa';
+import { FaHeart } from 'react-icons/fa6';
+import { MdLocationOn } from 'react-icons/md';
+import { PiStarThin } from 'react-icons/pi';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-
-import Header from '../../components/header/Header';
-import Footer from '../../components/footer/Footer'; 
-import bedImg from '../../assets/bed-realistic.png';
+import './style.scss';
 import bathImg from '../../assets/bath-realistic.png';
-import squareFtImg from '../../assets/set-square.png'
-
-import './style.scss'
+import bedImg from '../../assets/bed-realistic.png';
+import squareFtImg from '../../assets/set-square.png';
+import { getErrorMessage } from '../../api/client';
+import { getListing, requestRent } from '../../api/listings';
 import Carousel from '../../components/carousel/Carousel';
-import { images } from '../../components/carousel/data';
+import Footer from '../../components/footer/Footer';
+import Header from '../../components/header/Header';
+import { LISTING_KIND } from '../../constants';
+import { formatDate, formatLocation } from '../../utils/listing';
+
+const RATING_STARS = 5;
+const SOCIAL_ICONS = [FaFacebook, FaInstagram, FaTwitter, FaPinterestP];
 
 const ListingDetails = () => {
+    const { listing_id: listingId } = useParams();
+    const [searchParams] = useSearchParams();
+    const kind = searchParams.get('type') ?? LISTING_KIND.RENT_OUT;
+    const { user } = useSelector((state) => state.user);
+    const navigate = useNavigate();
+
+    const [listing, setListing] = useState(null);
+
+    useEffect(() => {
+        let isCancelled = false;
+
+        getListing(kind, listingId)
+            .then((data) => !isCancelled && setListing(data))
+            .catch((error) => !isCancelled && toast.error(getErrorMessage(error, 'Could not load this listing')));
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [kind, listingId]);
+
+    if (!listing) {
+        return (
+            <>
+                <Header />
+                <section className='listing__details--section'>
+                    <div className="container">Loading listing...</div>
+                </section>
+                <Footer />
+            </>
+        );
+    }
+
+    const owner = listing.userRef;
+    const isRentOut = kind === LISTING_KIND.RENT_OUT;
+    const isOwnListing = Boolean(user && owner && user._id === owner._id);
+    const canRequestRent = isRentOut && !isOwnListing && listing.status === 'active';
+
+    const handleRent = async () => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+        try {
+            await requestRent(listingId);
+            toast.success('Your rent request was sent to the owner');
+            navigate('/listings');
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
+    };
+
     return (
         <section>
             <Header />
-            <section className='listing__slider--section'>
-                <Carousel 
-                    images={images} 
-                    sliderPosition={{position: 'right', pixels: 0, fullWidth: true}} 
-                    paginationPosition={{position: 'bottom'}} 
-                />
-            </section>
+            {isRentOut && listing.images?.length > 0 && (
+                <section className='listing__slider--section'>
+                    <Carousel
+                        images={listing.images}
+                        sliderPosition={{ position: 'right', pixels: 0, fullWidth: true }}
+                        paginationPosition={{ position: 'bottom' }}
+                    />
+                </section>
+            )}
             <section className='listing__details--section'>
                 <div className="container">
                     <div className="listing__left__content">
@@ -40,11 +96,13 @@ const ListingDetails = () => {
                                     <div className="listing__details--meta">
                                         <ul className='listing__details--meta__wrapper'>
                                             <li>
-                                                <span className='listing__details--bage'>For Rent</span>
+                                                <span className='listing__details--bage'>
+                                                    {isRentOut ? 'For Rent' : 'Searched for'}
+                                                </span>
                                             </li>
                                             <li>
                                                 <span className='listing__details--meta__icon'><SlCalender /></span>
-                                                <span className="listing__details--meta__text">2 years ago</span>
+                                                <span className="listing__details--meta__text">{formatDate(listing.createdAt)}</span>
                                             </li>
                                             <li>
                                                 <span className='listing__details--meta__icon'><FaEye /></span>
@@ -52,136 +110,104 @@ const ListingDetails = () => {
                                             </li>
                                         </ul>
                                     </div>
-                                    <a href="#" className="listing__details--wishlist__btn"><FaHeart /></a>
+                                    <button type='button' className="listing__details--wishlist__btn" aria-label='Add to wishlist'>
+                                        <FaHeart />
+                                    </button>
                                 </div>
                                 <div className="listing__details--content__step">
-                                    <h2 className="listing__details--title">House In Foxhall Ave, Kingston</h2>
+                                    <h2 className="listing__details--title">{listing.title}</h2>
                                     <div className="listing__details--price__id">
                                         <div className="listing__details--price">
-                                            <span className='listing__details--price__new new_price'>$13000</span>
-                                            <span className='listing__details--price__current old_price'>$16000</span>
+                                            <span className='listing__details--price__new new_price'>${listing.price}/month</span>
+                                            {listing.newPrice && (
+                                                <span className='listing__details--price__current old_price'>${listing.newPrice}/month</span>
+                                            )}
                                         </div>
-                                        <span className="listing__details--property__id">Property ID: HZ24</span>
+                                        <span className="listing__details--property__id">Property ID: {listing._id}</span>
                                     </div>
-                                    <p className="listing__details--location">
+                                    <div className="listing__details--location">
                                         <span>
                                             <MdLocationOn />
                                         </span>
-                                        <p className='listing__details--location__text'>1421 San Pedro St, Los Angeles, CA</p>
-                                    </p>
+                                        <p className='listing__details--location__text'>{formatLocation(listing)}</p>
+                                    </div>
                                 </div>
                             </div>
                             <div className="listing__details--main__content">
                                 <div className="listing__details--content__step">
                                     <h3 className="listing__details--content__title">Description:</h3>
-                                    <p className="listing__details--content__desc">
-                                        Description It is a long established fact that a reader will be distrac by any websites look for ways
-                                        prevent AdBlock from blocking annoying ads. As a result, we've focused on improving our funct
-                                        so that we can overcome these anti-ad blocking attempts. Of course, you can help us continue to
-                                        improve our ad blocking ability by reporting any time you run into a website that won't allow you
-                                        to block the readable content of a page when looking at its layout. It is a long established fact
-                                    </p>
+                                    <p className="listing__details--content__desc">{listing.content}</p>
                                     <div className="apartment__info">
                                         <div className="apartment__info--list">
                                             <span className="apartmen__info--icon">
-                                                <img src={bedImg} alt="apartment-info" />
+                                                <img src={bedImg} alt="" />
                                             </span>
                                             <p>
-                                                <span className='apartment__info--count'>3</span>
+                                                <span className='apartment__info--count'>{listing.bedrooms}</span>
                                                 <span className="apartment__info--title">Bedrooms</span>
                                             </p>
                                         </div>
                                         <div className="apartment__info--list">
                                             <span className="apartmen__info--icon">
-                                                <img src={bathImg} alt="apartment-info" />
+                                                <img src={bathImg} alt="" />
                                             </span>
                                             <p>
-                                                <span className='apartment__info--count'>3</span>
+                                                <span className='apartment__info--count'>{listing.bathrooms}</span>
                                                 <span className="apartment__info--title">Bathrooms</span>
                                             </p>
                                         </div>
                                         <div className="apartment__info--list">
                                             <span className="apartmen__info--icon">
-                                                <img src={squareFtImg} alt="apartment-info" />
+                                                <img src={squareFtImg} alt="" />
                                             </span>
-                                            <p>150 Sqft</p>
+                                            <p>{listing.footage} Sqft</p>
                                         </div>
                                     </div>
+                                    {canRequestRent && (
+                                        <button type='button' className='rent__now--btn' onClick={handleRent}>Rent Now</button>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="listing__right__content">
-                        <div className="listing__widget">
-                            <div className="listing__admin--profile">
-                                <div className="admin__profile--thumbnail">
-                                    <img src="https://easy-peasy.ai/cdn-cgi/image/quality=80,format=auto,width=700/https://fdczvxmwwjwpwbeeqcth.supabase.co/storage/v1/object/public/images/50dab922-5d48-4c6b-8725-7fd0755d9334/3a3f2d35-8167-4708-9ef0-bdaa980989f9.png" alt="profile_pic" />
+                    {owner && (
+                        <div className="listing__right__content">
+                            <div className="listing__widget">
+                                <div className="listing__admin--profile">
+                                    <div className="admin__profile--thumbnail">
+                                        <img src={owner.profilePicture} alt={`${owner.firstName} ${owner.lastName}`} />
+                                    </div>
+                                </div>
+                                <div className="admin__profile--content">
+                                    <h3 className="admin__profile--name">{owner.firstName} {owner.lastName}</h3>
+                                    <ul className="admin__profile--rating">
+                                        {Array.from({ length: RATING_STARS }, (_, index) => (
+                                            <li key={index}>
+                                                <span><PiStarThin /></span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <p className="admin__profile--desc">
+                                        Lorem ipsum dolor sit amet, consectetur
+                                        adipisicing elit.Veritatis distinctio
+                                    </p>
+                                    <a href={`mailto:${owner.email}`} className="admin__profile--email">{owner.email}</a>
+                                    <ul className="profile__social">
+                                        {SOCIAL_ICONS.map((Icon, index) => (
+                                            <li className="profile__social--list" key={index}>
+                                                <span className="profile__social--icon"><Icon /></span>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </div>
-                            <div className="admin__profile--content">
-                                <h3 className="admin__profile--name">Georgi Stalev</h3>
-                                <ul className="admin__profile--rating">
-                                    <li>
-                                        <span>
-                                            <PiStarThin />
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            <PiStarThin />
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            <PiStarThin />
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            <PiStarThin />
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span>
-                                            <PiStarThin />
-                                        </span>
-                                    </li>
-                                </ul>
-                                <p className="admin__profile--desc">
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit.Veritatis distinctio
-                                </p>
-                                <a href="#" className="admin__profile--email">sttallev99@gmail.com</a>
-                                <ul className="profile__social">
-                                    <li className="profile__social--list">
-                                        <a href="#" className="profile__social--icon">
-                                            <FaFacebook />
-                                        </a>
-                                    </li>
-                                    <li className="profile__social--list">
-                                        <a href="#" className="profile__social--icon">
-                                            <FaInstagram />
-                                        </a>
-                                    </li>
-                                    <li className="profile__social--list">
-                                        <a href="#" className="profile__social--icon">
-                                            <FaTwitter />
-                                        </a>
-                                    </li>
-                                    <li className="profile__social--list">
-                                        <a href="#" className="profile__social--icon">
-                                            <FaPinterestP />
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </section>
             <Footer />
         </section>
-    )
-}
+    );
+};
 
-export default ListingDetails
+export default ListingDetails;

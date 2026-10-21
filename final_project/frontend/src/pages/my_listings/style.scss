@@ -22,7 +22,7 @@
                     }
 
                     thead {
-                        & > th {
+                        th {
                             text-align: left;
                             background-color: #f8fafc;
                         }
@@ -74,6 +74,17 @@
                             position: absolute;
                             background-color: white;
                             border-radius: .5rem;
+                            display: none;
+
+                            button {
+                                font: inherit;
+                                color: inherit;
+                                cursor: pointer;
+                            }
+                        }
+
+                        .is_open {
+                            display: block;
                         }
                     }
                 }

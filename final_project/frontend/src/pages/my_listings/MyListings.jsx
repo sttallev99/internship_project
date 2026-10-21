@@ -1,62 +1,137 @@
-import React, { useState } from 'react'
-import { BsThreeDotsVertical } from "react-icons/bs";
+import React, { useCallback, useEffect, useState } from 'react';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import classNames from 'classnames';
+import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import './style.scss';
-import Header from '../../components/header/Header';
-import SideNav from '../../components/sideNav/SideNav';
+import { getErrorMessage } from '../../api/client';
+import { deleteListing } from '../../api/listings';
+import { decideRentRequest, getOwnListings } from '../../api/user';
 import Footer from '../../components/footer/Footer';
-import ProfileHeading from '../../components/profile_heading/ProfileHeading';
+import Header from '../../components/header/Header';
 import Pagination from '../../components/pagination/Pagination';
+import ProfileHeading from '../../components/profile_heading/ProfileHeading';
+import SideNav from '../../components/sideNav/SideNav';
+import { PAGE_SIZE } from '../../constants';
+import { formatDate, formatLocation, getListingEditPath, getListingKind, isSearchedFor } from '../../utils/listing';
 
-const ListingRow = () => {
+const ListingStatus = ({ listing, onDecision }) => {
+    if (isSearchedFor(listing)) return null;
+
+    if (listing.status !== 'pending') {
+        return <span className="status">{listing.status}</span>;
+    }
+
     return (
-        <>
-            <tr>
-                <td>
-                    <div className="properties__author">
+        <select name="rentStatus" defaultValue="" onChange={(e) => onDecision(listing, e.target.value)}>
+            <option value="" disabled>Change status</option>
+            <option value="accept">Accept</option>
+            <option value="reject">Reject</option>
+        </select>
+    );
+};
+
+const ListingRow = ({ listing, onDelete, onDecision }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const handleDelete = () => {
+        setIsMenuOpen(false);
+        onDelete(listing);
+    };
+
+    return (
+        <tr>
+            <td>
+                <div className="properties__author">
+                    {listing.images?.length > 0 && (
                         <div className="properties__author--thumb">
-                            <img src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?cs=srgb&dl=pexels-binyaminmellish-186077.jpg&fm=jpg" alt="property image" />
+                            <img src={listing.images[0]} alt={listing.title} />
                         </div>
-                        <div className="review__author--text">
-                            <h3 className="review__author--title">Luxury Family Home</h3>
-                            <p className='review__author--subtitle'>1421 San Pedro St, Los Angeles, CA 900015</p>
-                            <span class="properties__author--price">$1900/mo</span>
-                        </div>
+                    )}
+                    <div className="review__author--text">
+                        <h3 className="review__author--title">{listing.title}</h3>
+                        <p className='review__author--subtitle'>{formatLocation(listing)}</p>
+                        <span className="properties__author--price">${listing.price}/mo</span>
                     </div>
-                </td>
-                <td>
-                    <span class="reviews__date">13 Jan, 2024 </span>
-                </td>
-                <td>
-                    <span class="status">Pending</span>
-                </td>
-                <td>
-                    <span class="properties__views">1210</span>
-                </td>
-                <td>
-                    <div className="reviews__action--wrapper">
-                        <button className="review__action--btn">
-                            <BsThreeDotsVertical />
-                        </button>
-                        <ul className="dropdown__menu">
-                            <li>
-                                <a href="#">Edit</a>
-                            </li>
-                            <li>
-                                <a href="#">Remove</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-        </>
-    )
-}
+                </div>
+            </td>
+            <td>
+                <span className="reviews__date">{formatDate(listing.createdAt)}</span>
+            </td>
+            <td>
+                <ListingStatus listing={listing} onDecision={onDecision} />
+            </td>
+            <td>
+                <span className="properties__views">1210</span>
+            </td>
+            <td>
+                <div className="reviews__action--wrapper">
+                    <button
+                        type='button'
+                        className="review__action--btn"
+                        aria-label='Listing actions'
+                        onClick={() => setIsMenuOpen((open) => !open)}
+                    >
+                        <BsThreeDotsVertical />
+                    </button>
+                    <ul className={classNames('dropdown__menu', { is_open: isMenuOpen })}>
+                        <li>
+                            <Link to={getListingEditPath(listing)}>Edit</Link>
+                        </li>
+                        <li>
+                            <button type='button' onClick={handleDelete}>Remove</button>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    );
+};
 
 const MyListings = () => {
-
     const [currentPage, setCurrentPage] = useState(1);
-    const [lastPage, setLastPage] = useState(10);
+    const [listings, setListings] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+
+    const fetchListings = useCallback(async () => {
+        try {
+            const { data, metaData } = await getOwnListings({ page: currentPage, limit: PAGE_SIZE });
+            setListings(data);
+            setTotalPages(metaData.totalPages);
+        } catch (error) {
+            toast.error(getErrorMessage(error, 'Could not load your listings'));
+        }
+    }, [currentPage]);
+
+    useEffect(() => {
+        fetchListings();
+    }, [fetchListings]);
+
+    const handleDelete = async (listing) => {
+        try {
+            await deleteListing(getListingKind(listing), listing._id);
+            toast.success('Listing deleted');
+            // Step back when the last item of a page was removed.
+            if (listings.length === 1 && currentPage > 1) {
+                setCurrentPage(currentPage - 1);
+            } else {
+                fetchListings();
+            }
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
+    };
+
+    const handleDecision = async (listing, decision) => {
+        try {
+            await decideRentRequest(listing._id, decision);
+            toast.success(decision === 'accept' ? 'Rent request accepted' : 'Rent request rejected');
+            fetchListings();
+        } catch (error) {
+            toast.error(getErrorMessage(error));
+        }
+    };
 
     return (
         <>
@@ -69,26 +144,40 @@ const MyListings = () => {
                         <div className="properties__table">
                             <table className="properties__table--wrapper">
                                 <thead>
-                                    <th>Listing Title</th>
-                                    <th>Date published</th>
-                                    <th>Status</th>
-                                    <th>View</th>
-                                    <th>Action</th>
+                                    <tr>
+                                        <th>Listing Title</th>
+                                        <th>Date published</th>
+                                        <th>Status</th>
+                                        <th>View</th>
+                                        <th>Action</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                    <ListingRow />
-                                    <ListingRow />
-                                    <ListingRow />
+                                    {listings.map((listing) => (
+                                        <ListingRow
+                                            key={listing._id}
+                                            listing={listing}
+                                            onDelete={handleDelete}
+                                            onDecision={handleDecision}
+                                        />
+                                    ))}
                                 </tbody>
                             </table>
+                            {listings.length === 0 && <p>You have not created any listings yet.</p>}
                         </div>
-                        <Pagination currentPage={currentPage} lastPage={lastPage} maxLength={7} setCurrentPage={setCurrentPage}/>
+                        <Pagination
+                            currentPage={currentPage}
+                            lastPage={totalPages}
+                            maxLength={7}
+                            setCurrentPage={setCurrentPage}
+                            url='/profile/own-listings'
+                        />
                     </div>
                 </main>
             </section>
             <Footer />
         </>
-    )
-}
+    );
+};
 
-export default MyListings
+export default MyListings;

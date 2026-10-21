@@ -1,120 +1,150 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { FaSearch } from "react-icons/fa";
+import React from 'react';
+import { FaSearch } from 'react-icons/fa';
 
 import './style.scss';
+import { LISTING_TYPE_FILTER, PRICE_RANGE, PROPERTY_TYPES } from '../../../constants';
 
-const Properties = () => {
-    const [min, setMin] = useState(100);
-    const [max,setMax] = useState(5000);
+export const INITIAL_FILTERS = {
+    searchTerm: '',
+    listingType: '',
+    propertyType: [],
+    minPrice: '',
+    maxPrice: '',
+};
 
-    const progressEl = useRef(null);
-    const minRangeEl = useRef(null);
-    const maxRangeEl = useRef(null);
+const LISTING_TYPE_OPTIONS = [
+    { value: LISTING_TYPE_FILTER.RENT_OUT, label: 'Rent Out' },
+    { value: LISTING_TYPE_FILTER.SEARCH_FOR, label: 'Search For' },
+];
 
-    const priceGap = 200;
+// An empty price filter means "no bound", which the slider shows as its outermost position.
+const toSliderValue = (price, fallback) => (price === '' ? fallback : Number(price));
+const toPercent = (value) => ((value - PRICE_RANGE.min) / (PRICE_RANGE.max - PRICE_RANGE.min)) * 100;
 
-    const onInputHandler = (e) => {
-        if(e.target.id === 'min') {
-            setMin(parseInt(e.target.value))
-        } else if(e.target.id === 'max') {
-            setMax(parseInt(e.target.value))
-        }
+const Filter = ({ filters, setFilters, onSubmit }) => {
+    const minPrice = toSliderValue(filters.minPrice, PRICE_RANGE.min);
+    const maxPrice = toSliderValue(filters.maxPrice, PRICE_RANGE.max);
 
-        if(max - min < priceGap) {
-            if(e.target.id === 'min') {
-                minRangeEl.current.value = max - priceGap
-            } else {
-                maxRangeEl.current.value = min + priceGap
-            }
-        }
-    }
+    const updateFilters = (patch) => setFilters((prev) => ({ ...prev, ...patch }));
 
-    useEffect(() => {
-        progressEl.current.style.left = (min / minRangeEl.current.max) * 100 + "%"
-        progressEl.current.style.right = 100 - (max / maxRangeEl.current.max) * 100 + "%"
-    }, [min, max])
+    const toggleListingType = (value) => (e) => {
+        updateFilters({ listingType: e.target.checked ? value : '' });
+    };
+
+    const togglePropertyType = (type) => () => {
+        setFilters((prev) => ({
+            ...prev,
+            propertyType: prev.propertyType.includes(type)
+                ? prev.propertyType.filter((item) => item !== type)
+                : [...prev.propertyType, type],
+        }));
+    };
+
+    const handleMinPriceChange = (e) => {
+        const value = Math.min(Number(e.target.value), maxPrice - PRICE_RANGE.gap);
+        updateFilters({ minPrice: value <= PRICE_RANGE.min ? '' : String(value) });
+    };
+
+    const handleMaxPriceChange = (e) => {
+        const value = Math.max(Number(e.target.value), minPrice + PRICE_RANGE.gap);
+        updateFilters({ maxPrice: value >= PRICE_RANGE.max ? '' : String(value) });
+    };
 
     return (
         <div className="col-lg-4">
-            <div className="listing__widget">
+            <form className="listing__widget" onSubmit={onSubmit}>
                 <div className="widget__search">
                     <div className="widget__search--input">
-                        <input type="text" className="widget__seatch--input__field" placeholder='Search Product'/>
-                        <button className='widget__search--btn'><FaSearch /></button>
+                        <input
+                            type="text"
+                            className="widget__seatch--input__field"
+                            placeholder='Search Product'
+                            value={filters.searchTerm}
+                            onChange={(e) => updateFilters({ searchTerm: e.target.value })}
+                        />
+                        <button type='submit' className='widget__search--btn' aria-label='Search'>
+                            <FaSearch />
+                        </button>
                     </div>
                 </div>
                 <div className="listing__widget--inner">
                     <div className="widget__list">
+                        <h2 className="widget__title">Listing Type</h2>
+                        <ul className='widget__categories'>
+                            {LISTING_TYPE_OPTIONS.map(({ value, label }) => (
+                                <li className="wdiget__categories__list" key={value}>
+                                    <label htmlFor={value} className="widget__catergories--label">{label}</label>
+                                    <input
+                                        type="checkbox"
+                                        id={value}
+                                        className='widget__categories--input'
+                                        checked={filters.listingType === value}
+                                        onChange={toggleListingType(value)}
+                                    />
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="widget__list">
                         <h2 className="widget__title">Property Type</h2>
                         <ul className='widget__categories'>
-                            <li className="wdiget__categories__list">
-                                <label htmlFor="check1" className="widget__catergories--label">Apartment (8)</label>
-                                <input type="checkbox" id='check1' className='widget__categories--input'/>
-                            </li>
-                            <li className="wdiget__categories__list">
-                                <label htmlFor="check2" className="widget__catergories--label">Container Home (5)</label>
-                                <input type="checkbox" id='check2' className='widget__categories--input'/>
-                            </li>
-                            <li className="wdiget__categories__list">
-                                <label htmlFor="check3" className="widget__catergories--label">Tiny Home (5)</label>
-                                <input type="checkbox" id='check3' className='widget__categories--input'/>
-                            </li>
-                            <li className="wdiget__categories__list">
-                                <label htmlFor="check4" className="widget__catergories--label">Villa Type (1)</label>
-                                <input type="checkbox" id='check4' className='widget__categories--input'/>
-                            </li>
-                            <li className="wdiget__categories__list">
-                                <label htmlFor="check5" className="widget__catergories--label">Duplex Modern Houses (7)</label>
-                                <input type="checkbox" id='check5' className='widget__categories--input'/>
-                            </li>
+                            {PROPERTY_TYPES.map((type) => (
+                                <li className="wdiget__categories__list" key={type}>
+                                    <label htmlFor={type} className="widget__catergories--label">{type}</label>
+                                    <input
+                                        type="checkbox"
+                                        id={type}
+                                        className='widget__categories--input'
+                                        checked={filters.propertyType.includes(type)}
+                                        onChange={togglePropertyType(type)}
+                                    />
+                                </li>
+                            ))}
                         </ul>
                     </div>
                     <div className="widget__list">
                         <h2 className="widget__title">Price filtering</h2>
-        
                         <div className="widget__price--filtering">
                             <div className="price__input">
-                                <div className='input__min'>{min}</div>
+                                <div className='input__min'>{minPrice}</div>
                                 <div className='separator'>-</div>
-                                <div className='input__max'>{max}</div>
+                                <div className='input__max'>{maxPrice}</div>
                             </div>
                             <div className='slider'>
-                                <div className="progress" ref={progressEl}>
-        
-                                </div>
+                                <div
+                                    className="progress"
+                                    style={{ left: `${toPercent(minPrice)}%`, right: `${100 - toPercent(maxPrice)}%` }}
+                                ></div>
                             </div>
                             <div className="range__input">
-                                <input type="range" id='min' className="range__min" min='100' max='5000' defaultValue={min} onInput={onInputHandler} ref={minRangeEl} step={100}/>
-                                <input type="range" id='max' className="range__max" min='100' max='5000' defaultValue={max} onInput={onInputHandler} ref={maxRangeEl} step={100}/>
+                                <input
+                                    type="range"
+                                    className="range__min"
+                                    aria-label='Minimum price'
+                                    min={PRICE_RANGE.min}
+                                    max={PRICE_RANGE.max}
+                                    step={PRICE_RANGE.step}
+                                    value={minPrice}
+                                    onChange={handleMinPriceChange}
+                                />
+                                <input
+                                    type="range"
+                                    className="range__max"
+                                    aria-label='Maximum price'
+                                    min={PRICE_RANGE.min}
+                                    max={PRICE_RANGE.max}
+                                    step={PRICE_RANGE.step}
+                                    value={maxPrice}
+                                    onChange={handleMaxPriceChange}
+                                />
                             </div>
                         </div>
                     </div>
-        
-                    <div className="widget__list">
-                        <h2 className="widget__title">Find By Location</h2>
-                        <ul className="widget__location">
-                            <li className="widget__location--list">
-                                <label htmlFor="check6" className="widget__location--label">Australia</label>
-                                <input type="checkbox" className="widget__categories--input" id='check6'/>
-                            </li>
-                            <li className="widget__location--list">
-                                <label htmlFor="check7" className="widget__location--label">Swezarland</label>
-                                <input type="checkbox" className="widget__categories--input" id='check7'/>
-                            </li>
-                            <li className="widget__location--list">
-                                <label htmlFor="check8" className="widget__location--label">Bulgaria</label>
-                                <input type="checkbox" className="widget__categories--input" id='check8'/>
-                            </li>
-                            <li className="widget__location--list">
-                                <label htmlFor="check9" className="widget__location--label">California</label>
-                                <input type="checkbox" className="widget__categories--input" id='check9'/>
-                            </li>
-                        </ul>
-                    </div>
+                    <button type='submit' className='firter__search--btn'>Search</button>
                 </div>
-            </div>
+            </form>
         </div>
-    )
-}
+    );
+};
 
-export default Properties
+export default Filter;

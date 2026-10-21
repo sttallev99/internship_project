@@ -12,16 +12,15 @@ const Header = () => {
     const headerRef = useRef(null);
     const observerRef = useRef(null);
     
+    // Adds a shadow to the sticky header once the page is scrolled past its top.
     useEffect(() => {
-        const navObserver = new IntersectionObserver((entries) => {
-            if(headerRef.current) {
-                headerRef.current.classList.toggle('shadow', !entries[0].isIntersecting)
-            }
+        const navObserver = new IntersectionObserver(([entry]) => {
+            headerRef.current?.classList.toggle('shadow', !entry.isIntersecting);
         });
-    
-        navObserver.observe(observerRef.current)
-    }, [headerRef, observerRef])
 
+        navObserver.observe(observerRef.current);
+        return () => navObserver.disconnect();
+    }, []);
 
   return (
     <>
@@ -54,16 +53,6 @@ const Header = () => {
                                 </Link>
                             </li>
                         }
-                        <li className='main__menu--items'>
-                            <a href="#" className='main__menu--link'>
-                                News
-                            </a>
-                        </li>
-                        <li className='main__menu--items'>
-                            <a href="#" className='main__menu--link'>
-                                About Us
-                            </a>
-                        </li>
                     </ul>
                 </nav>
             </div>
