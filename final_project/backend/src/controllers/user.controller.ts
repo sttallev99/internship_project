@@ -1,25 +1,33 @@
-import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, type RentOutStatus } from '../constants/listing.js';
-import { changeRentOutStatus, getSingleRentOutListing } from '../services/rentingOut.services.js';
-import { getOwnListings } from '../services/user.services.js';
+import type { Request } from 'express';
+
+import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../constants/listing.js';
+import { getSingleRentOutListing, resolveRentRequest } from '../services/rentingOut.services.js';
+import { getOwnListings, getRentedListings } from '../services/user.services.js';
 import AppError from '../utils/AppError.js';
 import catchAsync from '../utils/catchAsync.js';
 import { isListingOwner } from '../utils/listingInput.js';
 import { parseEnum, parsePositiveInt } from '../utils/queryParsers.js';
 
 const RENT_DECISIONS = ['accept', 'reject'] as const;
-type RentDecision = (typeof RENT_DECISIONS)[number];
 
-/** How the owner's decision on a pending rent request changes the listing status. */
-const STATUS_AFTER_DECISION: Record<RentDecision, RentOutStatus> = {
-    accept: 'taken',
-    reject: 'active',
-};
+const parsePagination = (req: Request) => ({
+    page: parsePositiveInt(req.query.page, 1),
+    limit: parsePositiveInt(req.query.limit, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE),
+});
 
 export const getAllUserListings = catchAsync(async (req, res) => {
-    const page = parsePositiveInt(req.query.page, 1);
-    const limit = parsePositiveInt(req.query.limit, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE);
+    const { page, limit } = parsePagination(req);
 
     const listingsData = await getOwnListings(req.userId!, page, limit);
+
+    res.status(200).json({ success: true, listingsData });
+});
+
+/** Listings the current user asked to rent, whether still pending or already accepted. */
+export const getMyRents = catchAsync(async (req, res) => {
+    const { page, limit } = parsePagination(req);
+
+    const listingsData = await getRentedListings(req.userId!, page, limit);
 
     res.status(200).json({ success: true, listingsData });
 });
@@ -41,7 +49,7 @@ export const changeRentStatus = catchAsync(async (req, res) => {
         throw new AppError('This listing has no pending rent request', 409);
     }
 
-    await changeRentOutStatus(listing.id, STATUS_AFTER_DECISION[decision]);
+    await resolveRentRequest(listing.id, decision === 'accept');
 
     res.status(200).json({ success: true, message: 'Listing status changed' });
 });

@@ -18,6 +18,8 @@ const rentingOutSchema = new Schema(
         images: { type: [String], default: [] },
         status: { type: String, enum: RENT_OUT_STATUSES, default: 'active' },
         userRef: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+        // The user who requested to rent the listing (set while `pending`, kept once `taken`).
+        tenantRef: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     },
     { timestamps: true },
 );

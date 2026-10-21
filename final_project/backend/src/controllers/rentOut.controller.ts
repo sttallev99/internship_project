@@ -1,10 +1,10 @@
 import { MAX_PAGE_SIZE } from '../constants/listing.js';
 import {
-    changeRentOutStatus,
     createRentingOutListing,
     deleteRentOutListing,
     getActiveRentingOutListings,
     getSingleRentOutListing,
+    requestRentOut,
     updateRentOutListing,
 } from '../services/rentingOut.services.js';
 import AppError from '../utils/AppError.js';
@@ -59,11 +59,11 @@ export const requestRent = catchAsync(async (req, res) => {
     if (isListingOwner(listing.userRef, req.userId)) {
         throw new AppError('You cannot rent your own listing', 400);
     }
-    if (listing.status !== 'active') {
+
+    const requestedListing = await requestRentOut(listing.id, req.userId!);
+    if (!requestedListing) {
         throw new AppError('This listing is no longer available', 409);
     }
-
-    await changeRentOutStatus(listing.id, 'pending');
 
     res.status(200).json({ success: true, message: 'Rent request sent' });
 });

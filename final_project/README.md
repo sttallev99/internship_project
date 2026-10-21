@@ -64,7 +64,9 @@ src/
 | PUT | `/listing/rent-out/:id/request-rent` | ✓ | Ask to rent a listing (status → `pending`) |
 | GET, POST | `/listing/search-for` | POST | List / create searched-for listings |
 | GET, PUT, DELETE | `/listing/search-for/:id` | PUT, DELETE (owner) | Read / update / delete a searched-for listing |
-| GET | `/user/own-listings` | ✓ | The current user's listings (paginated) || PUT | `/user/change-status/:id` | ✓ (owner) | Accept or reject a pending rent request |
+| GET | `/user/own-listings` | ✓ | The current user's listings (paginated) |
+| GET | `/user/my-rents` | ✓ | Listings the current user requested to rent or is renting (paginated) |
+| PUT | `/user/change-status/:id` | ✓ (owner) | Accept or reject a pending rent request |
 | POST | `/images` | ✓ | Upload a listing image (JPG/PNG, max 5 MB) to S3 |
 
 Errors share one shape: `{ "success": false, "status": "fail" | "error", "message": "..." }`.

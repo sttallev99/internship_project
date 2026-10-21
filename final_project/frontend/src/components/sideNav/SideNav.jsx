@@ -1,7 +1,7 @@
 import React from 'react';
 import { GoPlusCircle } from 'react-icons/go';
 import { SlLogout } from 'react-icons/sl';
-import { TbHeartCheck } from 'react-icons/tb';
+import { TbHeartCheck, TbKey } from 'react-icons/tb';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -39,6 +39,12 @@ const SideNav = () => {
                     <Link to='/profile/own-listings' className="sidebar__menu--link">
                         <TbHeartCheck className='sidebar__menu--icon'/>
                         <span className="sidebar__menu--text">My Listings</span>
+                    </Link>
+                </li>
+                <li className="sidebar__menu--items">
+                    <Link to='/profile/my-rents' className="sidebar__menu--link">
+                        <TbKey className='sidebar__menu--icon'/>
+                        <span className="sidebar__menu--text">My Rents</span>
                     </Link>
                 </li>
                 <li className="sidebar__menu--items">

@@ -3,8 +3,8 @@ import type { Types } from 'mongoose';
 /** Listing fields the client may set. Everything else is validated by the Mongoose schema. */
 export type ListingInput = Record<string, unknown>;
 
-// Fields controlled by the server: ownership, workflow status and Mongo metadata.
-const PROTECTED_FIELDS = new Set(['_id', 'userRef', 'status', 'createdAt', 'updatedAt', '__v']);
+// Fields controlled by the server: ownership, the rent workflow and Mongo metadata.
+const PROTECTED_FIELDS = new Set(['_id', 'userRef', 'tenantRef', 'status', 'createdAt', 'updatedAt', '__v']);
 
 /** Strips server-controlled fields so a client cannot e.g. reassign a listing to another user. */
 export const sanitizeListingInput = (body: unknown): ListingInput => {

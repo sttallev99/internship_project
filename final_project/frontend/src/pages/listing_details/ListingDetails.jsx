@@ -69,7 +69,7 @@ const ListingDetails = () => {
         try {
             await requestRent(listingId);
             toast.success('Your rent request was sent to the owner');
-            navigate('/listings');
+            navigate('/profile/my-rents');
         } catch (error) {
             toast.error(getErrorMessage(error));
         }
